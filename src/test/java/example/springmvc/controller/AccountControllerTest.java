@@ -27,15 +27,28 @@ public class AccountControllerTest {
 	}
 
 	@Test
-	public void testGetSignup() throws Exception {
+	public void testGetSignupSuccessful() throws Exception {
 		UserRegistrationData userAccountData = new UserRegistrationData(
 				"admin", "system");
-		final ModelAndView mav = controller.getSignupPage(userAccountData);
+		final ModelAndView mav = this.controller.getSignupPage(userAccountData);
+		User user = this.controller.getUserStorage().byId("admin");
+		
 		ModelAndViewAssert.assertViewName(mav, "signup");
-		User user = controller.getUserStorage().byId("admin");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "success", true);
 		assertNotNull(user);
 		assertEquals("admin", user.getId());
 		assertEquals("system", user.getPassword());
+	}
+	
+	@Test
+	public void testGetSignup_userAlreadyExists() throws Exception {
+		this.controller.getUserStorage().create(new UserRegistrationData("admin", "system"));
+		
+		final ModelAndView mav = controller.getSignupPage(new UserRegistrationData("admin", "system"));
+		
+		ModelAndViewAssert.assertViewName(mav, "signup");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "success", false);
+		ModelAndViewAssert.assertModelAttributeValue(mav, "errorMsg", "USER_EXISTS_ALREADY");
 	}
 
 	@Test

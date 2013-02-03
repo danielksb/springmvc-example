@@ -10,25 +10,37 @@ import example.springmvc.data.UserStorage;
 
 @Controller
 public class AccountController {
-	
+
 	private UserStorage userStorage;
 
-	@RequestMapping(value="/signup", method = RequestMethod.GET)
+	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public ModelAndView getSignupPage(UserRegistrationData userRegistrationData) {
-		this.userStorage.create(userRegistrationData);
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("signup");
+		try {
+			if (this.userStorage.byId(userRegistrationData.getId()) == null) {
+				this.userStorage.create(userRegistrationData);
+				mav.addObject("success", true);
+			} else {
+				mav.addObject("success", false);
+				mav.addObject("errorMsg", "USER_EXISTS_ALREADY");
+			}
+		} catch (Exception e) {
+			mav.addObject("success", false);
+			mav.addObject("errorMsg", "UNKNOWN_ERROR");
+			mav.addObject("errorDetails", e.getMessage());
+		}
 		return mav;
 	}
-	
-	@RequestMapping(value="/login", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView getLoginPage() {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("login");
 		return mav;
 	}
-	
-	@RequestMapping(value="/login", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ModelAndView doLogin() {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("index");
