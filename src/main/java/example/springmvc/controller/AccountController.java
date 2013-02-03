@@ -1,5 +1,6 @@
 package example.springmvc.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -11,10 +12,16 @@ import example.springmvc.data.UserStorage;
 @Controller
 public class AccountController {
 
+	@Autowired
 	private UserStorage userStorage;
 
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
-	public ModelAndView getSignupPage(UserRegistrationData userRegistrationData) {
+	public String getSignupPage() {
+		return "signup";
+	}
+	
+	@RequestMapping(value = "/signup", method = RequestMethod.POST)
+	public ModelAndView doSignup(UserRegistrationData userRegistrationData) {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("signup");
 		try {
