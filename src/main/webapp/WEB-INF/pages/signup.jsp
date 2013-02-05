@@ -16,34 +16,32 @@
 			<table>
 				<tr>
 					<td>Username</td>
-					<td><input type="text" name="id" value=""/></td>
+					<td><input type="text" name="id" value="" /></td>
+					<td><c:if test="${userId_error != null}">
+							<p style="color: red">User with id "${userId_error}" already exists}</p>
+						</c:if></td>
 				</tr>
 
 				<tr>
 					<td>Password</td>
-					<td><input type="password" name="password" value=""/></td>
+					<td><input type="password" name="password" value="" /></td>
+					<td></td>
 				</tr>
 
 				<tr>
 					<td>Verify Password</td>
-					<td><input type="password" name="verify" value=""/></td>
+					<td><input type="password" name="verify" value="" /></td>
+					<td></td>
 				</tr>
 
 				<tr>
 					<td>Email</td>
-					<td><input type="text" name="email" value=""/></td>
+					<td><input type="text" name="email" value="" /></td>
+					<td></td>
 				</tr>
 			</table>
 
-			<input type="submit"/>
-			<c:choose>
-				<c:when  test="${sucess == true}">
-					<p style="color:green">success</p>
-				</c:when>
-				<c:otherwise>
-					<p style="color:red">${error} ${errorMsg}</p>
-				</c:otherwise>
-			</c:choose>
+			<input type="submit" />
 		</form>
 	</p>
 </body>

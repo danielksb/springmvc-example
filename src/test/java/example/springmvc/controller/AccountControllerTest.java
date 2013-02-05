@@ -31,10 +31,11 @@ public class AccountControllerTest {
 		UserRegistrationData userAccountData = new UserRegistrationData(
 				"admin", "system");
 		final ModelAndView mav = this.controller.doSignup(userAccountData);
+		
 		User user = this.controller.getUserStorage().byId("admin");
 		
-		ModelAndViewAssert.assertViewName(mav, "signup");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "success", true);
+		ModelAndViewAssert.assertViewName(mav, "redirect:index");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "userId", user.getId());
 		assertNotNull(user);
 		assertEquals("admin", user.getId());
 		assertEquals("system", user.getPassword());
@@ -42,13 +43,12 @@ public class AccountControllerTest {
 	
 	@Test
 	public void testDoSignup_userAlreadyExists() throws Exception {
-		this.controller.getUserStorage().create(new UserRegistrationData("admin", "system"));
+		this.controller.getUserStorage().createNewUser(new UserRegistrationData("admin", "system"));
 		
 		final ModelAndView mav = controller.doSignup(new UserRegistrationData("admin", "system"));
 		
 		ModelAndViewAssert.assertViewName(mav, "signup");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "success", false);
-		ModelAndViewAssert.assertModelAttributeValue(mav, "errorMsg", "USER_EXISTS_ALREADY");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "userId_error", "admin");
 	}
 
 	@Test

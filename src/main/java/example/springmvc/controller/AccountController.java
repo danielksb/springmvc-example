@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import example.springmvc.data.RegistrationError;
+import example.springmvc.data.User;
 import example.springmvc.data.UserRegistrationData;
 import example.springmvc.data.UserStorage;
+import example.springmvc.utils.Result;
 
 @Controller
 public class AccountController {
@@ -23,19 +26,27 @@ public class AccountController {
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public ModelAndView doSignup(UserRegistrationData userRegistrationData) {
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("signup");
-		try {
-			if (this.userStorage.byId(userRegistrationData.getId()) == null) {
-				this.userStorage.create(userRegistrationData);
-				mav.addObject("success", true);
-			} else {
-				mav.addObject("success", false);
-				mav.addObject("errorMsg", "USER_EXISTS_ALREADY");
+		Result<User, RegistrationError> result = this.userStorage.createNewUser(userRegistrationData);
+		if (result.isSuccess()) {
+			User user = result.getResult();
+			mav.setViewName("index");
+			mav.addObject("userId", user.getId());
+		} else {
+			RegistrationError error = result.getError(); 
+			switch (error.getErrorType()) {
+			case USER_ALREADY_EXISTS:
+				mav.addObject("userId_error", error.getErrorMsg());
+				break;
+			case UNKNOWN_ERROR:
+				mav.addObject("error", error.getErrorMsg());
+				break;
+
+			default:
+				mav.addObject("error", error.getErrorMsg());
+				break;
 			}
-		} catch (Exception e) {
-			mav.addObject("success", false);
-			mav.addObject("errorMsg", "UNKNOWN_ERROR");
-			mav.addObject("errorDetails", e.getMessage());
+			
+			mav.setViewName("signup");
 		}
 		return mav;
 	}
@@ -53,7 +64,7 @@ public class AccountController {
 		mav.setViewName("index");
 		return mav;
 	}
-
+	
 	public UserStorage getUserStorage() {
 		return userStorage;
 	}

@@ -1,8 +1,10 @@
 package example.springmvc.data;
 
+import example.springmvc.utils.Result;
+
 public interface UserStorage {
 
-	public User create(UserRegistrationData userRegistrationData);
+	public Result<User, RegistrationError> createNewUser(UserRegistrationData userRegistrationData);
 	
 	public User byId(String id);
 }
