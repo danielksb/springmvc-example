@@ -17,7 +17,7 @@
 					<td>Username</td>
 					<td><input type="text" name="id" value="" /></td>
 					<td><c:if test="${userId_error != null}">
-							<p style="color: red">User with id "${userId_error}" already exists}</p>
+							<p style="color: red">User with id "${userId_error}" already exists.</p>
 						</c:if></td>
 				</tr>
 
