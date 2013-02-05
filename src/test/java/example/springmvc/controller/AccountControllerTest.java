@@ -7,7 +7,6 @@ import javax.servlet.http.Cookie;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.web.servlet.ModelAndView;
@@ -41,8 +40,7 @@ public class AccountControllerTest {
 		
 		User user = this.controller.getUserStorage().byId("admin");
 		
-		ModelAndViewAssert.assertViewName(mav, "index");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "userId", user.getId());
+		ModelAndViewAssert.assertViewName(mav, "redirect:/");
 		assertNotNull(user);
 		assertEquals("admin", user.getId());
 		assertEquals("system", user.getPassword());
@@ -72,7 +70,7 @@ public class AccountControllerTest {
 		
 		final ModelAndView mav = controller.doLogin("admin", "system", response);
 		
-		ModelAndViewAssert.assertViewName(mav, "index");
+		ModelAndViewAssert.assertViewName(mav, "redirect:/");
 		ModelAndViewAssert.assertModelAttributeValue(mav, "userId", "admin");
 		Cookie cookie = response.getCookie("sessionId");
 		assertNotNull(cookie);
@@ -118,7 +116,7 @@ public class AccountControllerTest {
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		
 		final String viewName = controller.doLogout(session.getId(), response);
-		assertEquals("index", viewName);
+		assertEquals("redirect:/", viewName);
 		assertNull(this.controller.getSessionStorage().getById(session.getId()));
 		Cookie cookie = response.getCookie("sessionId");
 		assertNotNull(cookie);

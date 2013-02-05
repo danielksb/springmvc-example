@@ -1,7 +1,6 @@
 package example.springmvc.controller;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,9 +38,7 @@ public class AccountController {
 		Result<User, RegistrationError> result = this.userStorage
 				.createNewUser(userRegistrationData);
 		if (result.isSuccess()) {
-			User user = result.getResult();
-			mav.setViewName("index");
-			mav.addObject("userId", user.getId());
+			mav.setViewName("redirect:/");
 		} else {
 			RegistrationError error = result.getError();
 			switch (error.getErrorType()) {
@@ -85,7 +82,7 @@ public class AccountController {
 			response.addCookie(new Cookie("sessionId", session.getId()));
 
 			ModelAndView mav = new ModelAndView();
-			mav.setViewName("index");
+			mav.setViewName("redirect:/");
 			mav.addObject("userId", userId);
 			return mav;
 		}
@@ -99,7 +96,7 @@ public class AccountController {
 			cookie.setMaxAge(0);
 			response.addCookie(cookie);
 		}
-		return "index";
+		return "redirect:/";
 	}
 
 	public UserStorage getUserStorage() {

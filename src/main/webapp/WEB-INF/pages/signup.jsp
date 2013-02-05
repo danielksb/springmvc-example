@@ -9,7 +9,6 @@
 <title>Example Registration</title>
 </head>
 <body>
-	<a href="login">Login</a>
 	<p>
 		<h2>Registration</h2>
 		<form method="post" action="signup" accept-charset="UTF-8">

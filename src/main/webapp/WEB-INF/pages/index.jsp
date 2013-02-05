@@ -9,16 +9,13 @@
 <title>Example</title>
 </head>
 <body>
+	<h1>Hello, ${name}</h1>
 	<c:choose>
-		<c:when test="${userId != null}">
-			<h1>Hello, ${userId}</h1>
+		<c:when test="${isUserLoggedIn == true}">
 			<form action="logout" method="post">
 				<input type="submit" value="logout" />
 			</form>
 		</c:when>
-		<c:otherwise>
-			<h1>${message}</h1>
-		</c:otherwise>
 	</c:choose>
 </body>
 </html>
