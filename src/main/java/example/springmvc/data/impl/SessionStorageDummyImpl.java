@@ -24,4 +24,9 @@ public class SessionStorageDummyImpl implements SessionStorage {
 		return session;
 	}
 
+	@Override
+	public Session deleteById(String sessionId) {
+		return this.data.remove(sessionId);
+	}
+
 }

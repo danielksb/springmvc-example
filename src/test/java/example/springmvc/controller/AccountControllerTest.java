@@ -7,6 +7,7 @@ import javax.servlet.http.Cookie;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.web.servlet.ModelAndView;
@@ -107,5 +108,21 @@ public class AccountControllerTest {
 		ModelAndViewAssert.assertModelAttributeValue(mav, "login_error", true);
 		Cookie cookie = response.getCookie("sessionId");
 		assertNull(cookie);
+	}
+	
+	@Test
+	public void testLogout_successful() {
+		this.controller.getUserStorage().createNewUser(new UserRegistrationData("admin", "system"));
+		Session session = this.controller.getSessionStorage().create("admin");
+		
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		
+		final String viewName = controller.doLogout(session.getId(), response);
+		assertEquals("index", viewName);
+		assertNull(this.controller.getSessionStorage().getById(session.getId()));
+		Cookie cookie = response.getCookie("sessionId");
+		assertNotNull(cookie);
+		assertEquals(0, cookie.getMaxAge());
+		assertEquals(null, cookie.getValue());
 	}
 }

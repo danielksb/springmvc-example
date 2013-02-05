@@ -12,6 +12,9 @@
 	<c:choose>
 		<c:when test="${userId != null}">
 			<h1>Hello, ${userId}</h1>
+			<form action="logout" method="post">
+				<input type="submit" value="logout" />
+			</form>
 		</c:when>
 		<c:otherwise>
 			<h1>${message}</h1>
