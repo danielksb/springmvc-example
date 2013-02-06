@@ -16,6 +16,9 @@
 				<input type="submit" value="logout" />
 			</form>
 		</c:when>
+		<c:otherwise>
+			<a href="login">login</a>
+		</c:otherwise>
 	</c:choose>
 </body>
 </html>
