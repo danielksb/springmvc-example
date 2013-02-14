@@ -18,20 +18,38 @@ import example.springmvc.data.UserRegistrationData;
 import example.springmvc.data.UserStorage;
 import example.springmvc.utils.Result;
 
+/**
+ * The AccountController handles all requests for signing up, logging in
+ * and logging out.
+ * 
+ * @author Daniel
+ *
+ */
 @Controller
 public class AccountController {
-
+	
 	@Autowired
 	private UserStorage userStorage;
 
 	@Autowired
 	private SessionStorage sessionStorage;
 
+	/**
+	 * Displays the signup form.
+	 * @return
+	 */
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public String getSignupPage() {
 		return "signup";
 	}
 
+	/**
+	 * Handles requests to create a new user and runs some very basic
+	 * validation checks on the uploaded data.
+	 * @param userRegistrationData
+	 * 		uploaded account data as defined by the user 
+	 * @return
+	 */
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public ModelAndView doSignup(UserRegistrationData userRegistrationData) {
 		ModelAndView mav = new ModelAndView();
@@ -59,6 +77,10 @@ public class AccountController {
 		return mav;
 	}
 
+	/**
+	 * Displays the login form.
+	 * @return
+	 */
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public ModelAndView getLoginPage() {
 		ModelAndView mav = new ModelAndView();
@@ -66,6 +88,17 @@ public class AccountController {
 		return mav;
 	}
 
+	/**
+	 * Handles the login. If successful a session cookie will be set in
+	 * the response and the user is now officially "logged in".
+	 * @param userId
+	 * 		user name
+	 * @param password
+	 * 		password of the user
+	 * @param response
+	 * 		response object, is needed to set the cookie
+	 * @return
+	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ModelAndView doLogin(String userId, String password,
 			HttpServletResponse response) {
@@ -88,6 +121,14 @@ public class AccountController {
 		}
 	}
 	
+	/**
+	 * Log out an user and delete the session cookie.
+	 * @param sessionId
+	 * 		session id which needs to be finished, this is stored in a cookie
+	 * @param response
+	 * 		response object, used to delete the cookie
+	 * @return
+	 */
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	public String doLogout(@CookieValue("sessionId") String sessionId, HttpServletResponse response) {
 		if (sessionId != null) {
@@ -99,6 +140,8 @@ public class AccountController {
 		return "redirect:/";
 	}
 
+	// getters and setters
+	
 	public UserStorage getUserStorage() {
 		return userStorage;
 	}

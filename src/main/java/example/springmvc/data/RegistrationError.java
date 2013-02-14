@@ -1,5 +1,13 @@
 package example.springmvc.data;
 
+/**
+ * This class defines possible error conditions which can
+ * appear during the registration process. Use this class
+ * instead of throwing exceptions to make the program flow
+ * more predictable.
+ * @author Daniel
+ *
+ */
 public class RegistrationError {
 
 	public enum ErrorType {USER_ALREADY_EXISTS, UNKNOWN_ERROR};

@@ -1,5 +1,10 @@
 package example.springmvc.data;
 
+/**
+ * This is a user session.
+ * @author Daniel
+ *
+ */
 public class Session {
 
 	private String id = "";

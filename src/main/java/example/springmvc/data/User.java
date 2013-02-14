@@ -1,5 +1,10 @@
 package example.springmvc.data;
 
+/**
+ * User and account data.
+ * @author Daniel
+ *
+ */
 public class User {
 	
 	private String id = "";
