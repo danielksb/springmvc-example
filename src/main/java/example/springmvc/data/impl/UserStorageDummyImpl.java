@@ -14,13 +14,17 @@ public class UserStorageDummyImpl implements UserStorage {
 
 	public Result<User, RegistrationError> createNewUser(UserRegistrationData userRegistrationData) {
 		String userId = userRegistrationData.getId();
-		if (this.byId(userId) == null) {
-			User user = new User(userRegistrationData.getId(), userRegistrationData.getPassword());
-			this.data.put(userRegistrationData.getId(), user);
-			return Result.createSuccess(user);
-		} else {
+		// check if user already exists
+		if (this.byId(userId) != null) {
 			return Result.createError(new RegistrationError(RegistrationError.ErrorType.USER_ALREADY_EXISTS, userId));
 		}
+		// check if passwords match
+		if (!userRegistrationData.getPassword().equals(userRegistrationData.getConfirmedPassword())) {
+			return Result.createError(new RegistrationError(RegistrationError.ErrorType.PASSWORDS_DONT_MATCH));
+		}
+		User user = new User(userRegistrationData.getId(), userRegistrationData.getPassword());
+		this.data.put(userRegistrationData.getId(), user);
+		return Result.createSuccess(user);
 	}
 	
 	public User byId(String id) {

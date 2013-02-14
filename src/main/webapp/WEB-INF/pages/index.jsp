@@ -18,6 +18,7 @@
 		</c:when>
 		<c:otherwise>
 			<a href="login">login</a>
+			<a href="signup">signup</a>
 		</c:otherwise>
 	</c:choose>
 </body>

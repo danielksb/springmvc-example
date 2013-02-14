@@ -24,18 +24,14 @@
 				<tr>
 					<td>Password</td>
 					<td><input type="password" name="password" value="" /></td>
-					<td></td>
+					<td><c:if test="${password_error == 'not_equal'}">
+							<p style="color: red">Passwords don't match.</p>
+						</c:if></td>
 				</tr>
 
 				<tr>
 					<td>Verify Password</td>
-					<td><input type="password" name="verify" value="" /></td>
-					<td></td>
-				</tr>
-
-				<tr>
-					<td>Email</td>
-					<td><input type="text" name="email" value="" /></td>
+					<td><input type="password" name="confirmedPassword" value="" /></td>
 					<td></td>
 				</tr>
 			</table>

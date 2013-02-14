@@ -10,7 +10,7 @@ package example.springmvc.data;
  */
 public class RegistrationError {
 
-	public enum ErrorType {USER_ALREADY_EXISTS, UNKNOWN_ERROR};
+	public enum ErrorType {USER_ALREADY_EXISTS, UNKNOWN_ERROR, PASSWORDS_DONT_MATCH};
 	
 	public RegistrationError() {
 		this.errorType = ErrorType.UNKNOWN_ERROR;

@@ -35,7 +35,7 @@ public class AccountControllerTest {
 	@Test
 	public void testDoSignupSuccessful() throws Exception {
 		UserRegistrationData userAccountData = new UserRegistrationData(
-				"admin", "system");
+				"admin", "system", "system");
 		final ModelAndView mav = this.controller.doSignup(userAccountData);
 		
 		User user = this.controller.getUserStorage().byId("admin");
@@ -48,12 +48,20 @@ public class AccountControllerTest {
 	
 	@Test
 	public void testDoSignup_userAlreadyExists() throws Exception {
-		this.controller.getUserStorage().createNewUser(new UserRegistrationData("admin", "system"));
+		this.createStandardTestUser();
 		
-		final ModelAndView mav = controller.doSignup(new UserRegistrationData("admin", "system"));
+		final ModelAndView mav = controller.doSignup(new UserRegistrationData("admin", "system", "system"));
 		
 		ModelAndViewAssert.assertViewName(mav, "signup");
 		ModelAndViewAssert.assertModelAttributeValue(mav, "userId_error", "admin");
+	}
+	
+	@Test
+	public void testDoSignup_passwordsNotEqual() throws Exception {
+		final ModelAndView mav = controller.doSignup(new UserRegistrationData("admin", "system", "metsys"));
+		
+		ModelAndViewAssert.assertViewName(mav, "signup");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "password_error", "not_equal");
 	}
 
 	@Test
@@ -64,7 +72,7 @@ public class AccountControllerTest {
 
 	@Test
 	public void testDoLogin_successful() throws Exception {
-		this.controller.getUserStorage().createNewUser(new UserRegistrationData("admin", "system"));
+		this.createStandardTestUser();
 		
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		
@@ -82,7 +90,7 @@ public class AccountControllerTest {
 	
 	@Test
 	public void testDoLogin_failed_unknownUser() throws Exception {
-		this.controller.getUserStorage().createNewUser(new UserRegistrationData("admin", "system"));
+		this.createStandardTestUser();
 		
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		
@@ -96,7 +104,7 @@ public class AccountControllerTest {
 	
 	@Test
 	public void testDoLogin_failed_wrongPassword() throws Exception {
-		this.controller.getUserStorage().createNewUser(new UserRegistrationData("admin", "system"));
+		this.createStandardTestUser();
 		
 		MockHttpServletResponse response = new MockHttpServletResponse();
 		
@@ -110,7 +118,7 @@ public class AccountControllerTest {
 	
 	@Test
 	public void testLogout_successful() {
-		this.controller.getUserStorage().createNewUser(new UserRegistrationData("admin", "system"));
+		this.createStandardTestUser();
 		Session session = this.controller.getSessionStorage().create("admin");
 		
 		MockHttpServletResponse response = new MockHttpServletResponse();
@@ -122,5 +130,9 @@ public class AccountControllerTest {
 		assertNotNull(cookie);
 		assertEquals(0, cookie.getMaxAge());
 		assertEquals(null, cookie.getValue());
+	}
+	
+	private void createStandardTestUser() {
+		this.controller.getUserStorage().createNewUser(new UserRegistrationData("admin", "system", "system"));
 	}
 }
