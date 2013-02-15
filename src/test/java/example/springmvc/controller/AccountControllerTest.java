@@ -11,6 +11,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.web.servlet.ModelAndView;
 
+import example.springmvc.data.RegistrationError;
 import example.springmvc.data.Session;
 import example.springmvc.data.User;
 import example.springmvc.data.UserRegistrationData;
@@ -63,7 +64,7 @@ public class AccountControllerTest {
 		final ModelAndView mav = controller.doSignup(userRegistrationData);
 		
 		ModelAndViewAssert.assertViewName(mav, "signup");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "password_error", "not_equal");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "error", RegistrationError.ErrorType.PASSWORDS_DONT_MATCH.toString());
 		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
 	}
 	
@@ -73,7 +74,7 @@ public class AccountControllerTest {
 		final ModelAndView mav = controller.doSignup(userRegistrationData);
 		
 		ModelAndViewAssert.assertViewName(mav, "signup");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "error", "invalid_input");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "error", RegistrationError.ErrorType.INVALID_INPUT.toString());
 		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
 	}
 	
@@ -83,7 +84,7 @@ public class AccountControllerTest {
 		final ModelAndView mav = controller.doSignup(userRegistrationData);
 		
 		ModelAndViewAssert.assertViewName(mav, "signup");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "error", "invalid_input");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "error", RegistrationError.ErrorType.INVALID_INPUT.toString());
 		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
 	}
 	
@@ -93,7 +94,7 @@ public class AccountControllerTest {
 		final ModelAndView mav = controller.doSignup(userRegistrationData);
 		
 		ModelAndViewAssert.assertViewName(mav, "signup");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "error", "invalid_input");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "error", RegistrationError.ErrorType.INVALID_INPUT.toString());
 		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
 	}
 

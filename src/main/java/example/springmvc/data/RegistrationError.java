@@ -19,7 +19,7 @@ public class RegistrationError {
 	
 	public RegistrationError(ErrorType errorType) {
 		this.errorType = errorType;
-		this.errorMsg = "";
+		this.errorMsg = errorType.toString();
 	}
 	public RegistrationError(ErrorType errorType, String errorMsg) {
 		this.errorType = errorType;
@@ -28,7 +28,7 @@ public class RegistrationError {
 	
 	private ErrorType errorType = ErrorType.UNKNOWN_ERROR;
 	
-	private String errorMsg = "";
+	private String errorMsg = ErrorType.UNKNOWN_ERROR.toString();
 
 	public ErrorType getErrorType() {
 		return errorType;

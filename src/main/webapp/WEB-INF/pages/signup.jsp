@@ -26,7 +26,7 @@
 			<tr>
 				<td>Password</td>
 				<td><input type="password" name="password" value="" /></td>
-				<td><c:if test="${password_error == 'not_equal'}">
+				<td><c:if test="${error == 'PASSWORDS_DONT_MATCH'}">
 						<p style="color: red">Passwords don't match.</p>
 					</c:if></td>
 			</tr>
@@ -34,7 +34,7 @@
 			<tr>
 				<td>Verify Password</td>
 				<td><input type="password" name="confirmedPassword" value="" /></td>
-				<td><c:if test="${password_error == 'not_equal'}">
+				<td><c:if test="${error == 'PASSWORDS_DONT_MATCH'}">
 						<p style="color: red">XXX</p>
 					</c:if></td>
 			</tr>

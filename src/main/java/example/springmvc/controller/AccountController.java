@@ -63,13 +63,6 @@ public class AccountController {
 			case USER_ALREADY_EXISTS:
 				mav.addObject("userId_error", error.getErrorMsg());
 				break;
-			case PASSWORDS_DONT_MATCH:
-				mav.addObject("password_error", "not_equal");
-				break;
-			case UNKNOWN_ERROR:
-				mav.addObject("error", error.getErrorMsg());
-				break;
-
 			default:
 				mav.addObject("error", error.getErrorMsg());
 				break;
