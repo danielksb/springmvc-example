@@ -75,6 +75,10 @@ public class AccountController {
 				break;
 			}
 
+			// We want to prevent the user from filling out the whole form again,
+			// so we add the registration data to the view. This allows us to
+			// display the old values.
+			mav.addObject("userRegistrationData", userRegistrationData);
 			mav.setViewName("signup");
 		}
 		return mav;

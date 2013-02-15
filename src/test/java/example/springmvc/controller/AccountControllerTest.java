@@ -49,19 +49,22 @@ public class AccountControllerTest {
 	@Test
 	public void testDoSignup_userAlreadyExists() throws Exception {
 		this.createStandardTestUser();
-		
-		final ModelAndView mav = controller.doSignup(new UserRegistrationData("admin", "system", "system"));
+		UserRegistrationData userRegistrationData = new UserRegistrationData("admin", "system", "system");
+		final ModelAndView mav = controller.doSignup(userRegistrationData);
 		
 		ModelAndViewAssert.assertViewName(mav, "signup");
 		ModelAndViewAssert.assertModelAttributeValue(mav, "userId_error", "admin");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
 	}
 	
 	@Test
 	public void testDoSignup_passwordsNotEqual() throws Exception {
-		final ModelAndView mav = controller.doSignup(new UserRegistrationData("admin", "system", "metsys"));
+		UserRegistrationData userRegistrationData = new UserRegistrationData("admin", "system", "metsys");
+		final ModelAndView mav = controller.doSignup(userRegistrationData);
 		
 		ModelAndViewAssert.assertViewName(mav, "signup");
 		ModelAndViewAssert.assertModelAttributeValue(mav, "password_error", "not_equal");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
 	}
 
 	@Test

@@ -9,35 +9,38 @@
 <title>Example Registration</title>
 </head>
 <body>
-	<p>
-		<h2>Registration</h2>
-		<form method="post" action="signup" accept-charset="UTF-8">
-			<table>
-				<tr>
-					<td>Username</td>
-					<td><input type="text" name="id" value="" /></td>
-					<td><c:if test="${userId_error != null}">
-							<p style="color: red">User with id "${userId_error}" already exists.</p>
-						</c:if></td>
-				</tr>
+	<h2>Registration</h2>
+	<form method="post" action="signup" accept-charset="UTF-8">
+		<table>
+			<tr>
+				<td>Username</td>
+				<td><input type="text" name="id"
+					value="${userId_error != null ? '' : userRegistrationData.id}" />
+				</td>
+				<td><c:if test="${userId_error != null}">
+						<p style="color: red">User with id "${userId_error}" already
+							exists.</p>
+					</c:if></td>
+			</tr>
 
-				<tr>
-					<td>Password</td>
-					<td><input type="password" name="password" value="" /></td>
-					<td><c:if test="${password_error == 'not_equal'}">
-							<p style="color: red">Passwords don't match.</p>
-						</c:if></td>
-				</tr>
+			<tr>
+				<td>Password</td>
+				<td><input type="password" name="password" value="" /></td>
+				<td><c:if test="${password_error == 'not_equal'}">
+						<p style="color: red">Passwords don't match.</p>
+					</c:if></td>
+			</tr>
 
-				<tr>
-					<td>Verify Password</td>
-					<td><input type="password" name="confirmedPassword" value="" /></td>
-					<td></td>
-				</tr>
-			</table>
+			<tr>
+				<td>Verify Password</td>
+				<td><input type="password" name="confirmedPassword" value="" /></td>
+				<td><c:if test="${password_error == 'not_equal'}">
+						<p style="color: red">XXX</p>
+					</c:if></td>
+			</tr>
+		</table>
 
-			<input type="submit" />
-		</form>
-	</p>
+		<input type="submit" />
+	</form>
 </body>
 </html>

@@ -47,5 +47,4 @@ public class UserRegistrationData {
 	public void setConfirmedPassword(String confirmedPassword) {
 		this.confirmedPassword = confirmedPassword;
 	}
-
 }
