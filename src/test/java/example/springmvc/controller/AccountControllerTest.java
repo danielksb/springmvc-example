@@ -66,6 +66,36 @@ public class AccountControllerTest {
 		ModelAndViewAssert.assertModelAttributeValue(mav, "password_error", "not_equal");
 		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
 	}
+	
+	@Test
+	public void testDoSignup_invalidInput_userId() throws Exception {
+		UserRegistrationData userRegistrationData = new UserRegistrationData(null, "system", "system");
+		final ModelAndView mav = controller.doSignup(userRegistrationData);
+		
+		ModelAndViewAssert.assertViewName(mav, "signup");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "error", "invalid_input");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
+	}
+	
+	@Test
+	public void testDoSignup_invalidInput_password() throws Exception {
+		UserRegistrationData userRegistrationData = new UserRegistrationData("admin", null, "system");
+		final ModelAndView mav = controller.doSignup(userRegistrationData);
+		
+		ModelAndViewAssert.assertViewName(mav, "signup");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "error", "invalid_input");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
+	}
+	
+	@Test
+	public void testDoSignup_invalidInput_confirmedPassword() throws Exception {
+		UserRegistrationData userRegistrationData = new UserRegistrationData("admin", "system", null);
+		final ModelAndView mav = controller.doSignup(userRegistrationData);
+		
+		ModelAndViewAssert.assertViewName(mav, "signup");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "error", "invalid_input");
+		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
+	}
 
 	@Test
 	public void testGetLogin() throws Exception {

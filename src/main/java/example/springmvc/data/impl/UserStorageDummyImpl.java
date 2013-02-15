@@ -14,6 +14,10 @@ public class UserStorageDummyImpl implements UserStorage {
 
 	public Result<User, RegistrationError> createNewUser(UserRegistrationData userRegistrationData) {
 		String userId = userRegistrationData.getId();
+		// check if an input field is null
+		if (userRegistrationData.getId() == null || userRegistrationData.getPassword() == null || userRegistrationData.getConfirmedPassword() == null) {
+			return Result.createError(new RegistrationError(RegistrationError.ErrorType.INVALID_INPUT, "invalid_input"));
+		}
 		// check if user already exists
 		if (this.byId(userId) != null) {
 			return Result.createError(new RegistrationError(RegistrationError.ErrorType.USER_ALREADY_EXISTS, userId));
