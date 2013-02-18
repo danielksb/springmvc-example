@@ -113,7 +113,6 @@ public class AccountControllerTest {
 		final ModelAndView mav = controller.doLogin("admin", "system", response);
 		
 		ModelAndViewAssert.assertViewName(mav, "redirect:/");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "userId", "admin");
 		Cookie cookie = response.getCookie("sessionId");
 		assertNotNull(cookie);
 		assertNotNull(cookie.getValue());

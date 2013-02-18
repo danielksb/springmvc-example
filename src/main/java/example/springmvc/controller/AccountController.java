@@ -116,7 +116,6 @@ public class AccountController {
 
 			ModelAndView mav = new ModelAndView();
 			mav.setViewName("redirect:/");
-			mav.addObject("userId", userId);
 			return mav;
 		}
 	}
