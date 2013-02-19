@@ -12,16 +12,20 @@ import org.springframework.web.servlet.ModelAndView;
 import example.springmvc.data.RegistrationError;
 import example.springmvc.data.User;
 import example.springmvc.data.UserRegistrationData;
+import example.springmvc.data.UserService;
 import example.springmvc.data.impl.UserStorageDummyImpl;
 
 public class AccountControllerTest {
 
 	AccountController controller;
+	UserService userService;
 
 	@Before
 	public void setUp() {
 		controller = new AccountController();
-		controller.setUserStorage(new UserStorageDummyImpl());
+		userService = new UserService();
+		controller.setUserService(userService);
+		userService.setUserStorage(new UserStorageDummyImpl());
 	}
 
 	@After
@@ -34,7 +38,7 @@ public class AccountControllerTest {
 				"admin", "system", "system");
 		final ModelAndView mav = this.controller.doSignup(userAccountData);
 		
-		User user = this.controller.getUserStorage().byId("admin");
+		User user = this.controller.getUserService().getUserStorage().byId("admin");
 		
 		ModelAndViewAssert.assertViewName(mav, "redirect:/");
 		assertNotNull(user);
@@ -100,6 +104,6 @@ public class AccountControllerTest {
 	}
 
 	private void createStandardTestUser() {
-		this.controller.getUserStorage().createNewUser(new UserRegistrationData("admin", "system", "system"));
+		this.controller.getUserService().createNewUser(new UserRegistrationData("admin", "system", "system"));
 	}
 }

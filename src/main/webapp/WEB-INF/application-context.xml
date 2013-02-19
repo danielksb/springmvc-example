@@ -12,7 +12,25 @@
 		http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
 		http://www.springframework.org/schema/aop 
 		http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
-		
-		<bean id="userStorage" class="example.springmvc.data.impl.UserStorageDummyImpl"></bean>
+	
+	<bean id="userService" class="example.springmvc.data.UserService"></bean>
+	<bean id="userStorage" class="example.springmvc.data.impl.UserStorageDummyImpl"></bean>
+	
+	<!-- replace the previous with the next line to use the MongoDB storage implementation  --> 
+	<!-- bean id="userStorage" class="example.springmvc.data.impl.UserStorageMongoDbImpl"></bean -->
+
+	<!-- MongoDB -->
+	
+	<bean id="mongo" class="com.mongodb.Mongo"></bean>
+
+	<bean id="mongoFactory"
+		class="org.springframework.data.mongodb.core.SimpleMongoDbFactory">
+		<constructor-arg name="mongo" ref="mongo"></constructor-arg>
+		<constructor-arg name="databaseName" value="springmvc"></constructor-arg>
+	</bean>
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoFactory"></constructor-arg>
+	</bean>
 	
 </beans>

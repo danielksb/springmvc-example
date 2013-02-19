@@ -12,19 +12,19 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import example.springmvc.data.UserStorage;
+import example.springmvc.data.UserService;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
-	private UserStorage userStorage;
+	private UserService userService;
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String name = authentication.getName();
 		String password = authentication.getCredentials().toString();
-		if (this.userStorage.verifyLogin(name, password)) {
+		if (this.userService.verifyLogin(name, password)) {
 			List<GrantedAuthority> grantedAuths = new ArrayList<>();
 			grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
 			Authentication auth = new UsernamePasswordAuthenticationToken(name, password, grantedAuths);
@@ -38,14 +38,13 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	public boolean supports(Class<?> authentication) {
 		return authentication.equals(UsernamePasswordAuthenticationToken.class);
 	}
-
 	
-	
-	public UserStorage getUserStorage() {
-		return userStorage;
+	public UserService getUserService() {
+		return userService;
 	}
 
-	public void setUserStorage(UserStorage userStorage) {
-		this.userStorage = userStorage;
+	public void setUserService(UserService userService) {
+		this.userService = userService;
 	}
+	
 }

@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import example.springmvc.data.RegistrationError;
 import example.springmvc.data.User;
 import example.springmvc.data.UserRegistrationData;
-import example.springmvc.data.UserStorage;
+import example.springmvc.data.UserService;
 import example.springmvc.utils.Result;
 
 /**
@@ -23,7 +23,7 @@ import example.springmvc.utils.Result;
 public class AccountController {
 	
 	@Autowired
-	private UserStorage userStorage;
+	private UserService userService;
 
 	/**
 	 * Displays the signup form.
@@ -44,7 +44,7 @@ public class AccountController {
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public ModelAndView doSignup(UserRegistrationData userRegistrationData) {
 		ModelAndView mav = new ModelAndView();
-		Result<User, RegistrationError> result = this.userStorage
+		Result<User, RegistrationError> result = this.userService
 				.createNewUser(userRegistrationData);
 		if (result.isSuccess()) {
 			mav.setViewName("redirect:/");
@@ -93,12 +93,12 @@ public class AccountController {
 	
 	// getters and setters
 	
-	public UserStorage getUserStorage() {
-		return userStorage;
+	public UserService getUserService() {
+		return this.userService;
 	}
 
-	public void setUserStorage(UserStorage userStorage) {
-		this.userStorage = userStorage;
+	public void setUserService(UserService userService) {
+		this.userService = userService;
 	}
 
 }
