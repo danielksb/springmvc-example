@@ -1,14 +1,11 @@
 package example.springmvc.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
-import example.springmvc.data.Session;
-import example.springmvc.data.SessionStorage;
 
 /**
  * This controller is responsible for the main/index page of the web
@@ -19,10 +16,6 @@ import example.springmvc.data.SessionStorage;
 @Controller
 @RequestMapping("/")
 public class MainController {
-
-	
-	@Autowired
-	private SessionStorage sessionStorage;
 	
 	/**
 	 * Displays the web page by greeting the user with it's user name. If
@@ -33,8 +26,9 @@ public class MainController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView getIndexPage(@CookieValue(required=false, value="sessionId") String sessionId) {
-		String userId = this.getUserId(sessionId);
+	public ModelAndView getIndexPage() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String userId = auth.getName();
 		ModelAndView mav = new ModelAndView("index");
 		
 		if (userId == null) {
@@ -45,25 +39,6 @@ public class MainController {
 			mav.addObject("isUserLoggedIn", true);
 		}
 		return mav;
-	}
-	
-	private String getUserId(String sessionId) {
-		if (sessionId != null) {
-			Session session = this.sessionStorage.getById(sessionId);
-			if (session != null) {
-				String userId = session.getUserId();
-				return userId;
-			}
-		}
-		return null;
-	}
-	
-	public SessionStorage getSessionStorage() {
-		return sessionStorage;
-	}
-
-	public void setSessionStorage(SessionStorage sessionStorage) {
-		this.sessionStorage = sessionStorage;
 	}
 
 }

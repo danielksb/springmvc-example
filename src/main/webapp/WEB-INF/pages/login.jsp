@@ -6,11 +6,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
-<title>Example Blog</title>
+<title>Example</title>
 </head>
 <body>
 	<h1>Login</h1>
-	<form method="post" action="login" accept-charset="UTF-8">
+	<form method="post" action=<c:url value="j_spring_security_check"/> accept-charset="UTF-8">
 		<table>
 			<tr>
 				<td>Username</td>

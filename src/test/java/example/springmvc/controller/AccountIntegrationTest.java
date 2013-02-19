@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
 		"classpath:WEB-INF/application-context.xml",
+		"classpath:WEB-INF/spring-security.xml",
 		"classpath:WEB-INF/mvc-dispatcher-servlet.xml" })
 @WebAppConfiguration("src/main/webapp")
 public class AccountIntegrationTest {
@@ -43,27 +44,15 @@ public class AccountIntegrationTest {
 				.andExpect(view().name("login"));
 	}
 
-	@Test
-	public void testGetIndex_withoutLogin() throws Exception {
-		this.mockMvc.perform(get("/")).andExpect(status().isOk())
-				.andExpect(model().attribute("name", "World"))
-				.andExpect(model().attribute("isUserLoggedIn", false));
-	}
 
 	@Test
-	public void testCreateAccountAndLogin() throws Exception {
+	public void testCreateAccount() throws Exception {
 		this.mockMvc
 				.perform(
 						post("/signup")
 								.param("id", "admin")
 								.param("password", "system")
 								.param("confirmedPassword", "system"))
-				.andExpect(redirectedUrl("/"));
-		this.mockMvc
-				.perform(
-						post("/login").param("userId", "admin")
-							.param("password", "system"))
-				.andExpect(cookie().exists("sessionId"))
 				.andExpect(redirectedUrl("/"));
 	}
 }

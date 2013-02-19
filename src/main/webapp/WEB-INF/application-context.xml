@@ -14,6 +14,5 @@
 		http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 		
 		<bean id="userStorage" class="example.springmvc.data.impl.UserStorageDummyImpl"></bean>
-		<bean id="sessionStorage" class="example.springmvc.data.impl.SessionStorageDummyImpl"></bean>
 	
 </beans>

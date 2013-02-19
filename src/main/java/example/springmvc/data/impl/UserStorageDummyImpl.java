@@ -37,7 +37,7 @@ public class UserStorageDummyImpl implements UserStorage {
 
 	@Override
 	public boolean verifyLogin(String userName, String password) {
-		User user = this.data.get("userName");
+		User user = this.data.get(userName);
 		return (user != null) &&  user.getPassword().equals(password);
 	}
 }

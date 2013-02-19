@@ -12,9 +12,7 @@
 	<h1>Hello, ${name}</h1>
 	<c:choose>
 		<c:when test="${isUserLoggedIn == true}">
-			<form action="logout" method="post">
-				<input type="submit" value="logout" />
-			</form>
+			<a href=<c:url value="j_spring_security_logout"/>>logout</a>
 		</c:when>
 		<c:otherwise>
 			<a href="login">login</a>
