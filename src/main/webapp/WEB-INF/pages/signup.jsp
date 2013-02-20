@@ -7,12 +7,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII" />
-<!-- link rel="stylesheet" type="text/css" href=<c:url value="/css/registration.css"/> / -->
-<style>
-.registrationError {
-	color: red;
-}
-</style>
+<link rel="stylesheet" type="text/css" href=<c:url value="/css/registration.css"/> />
 <title>Example Registration</title>
 </head>
 <body>
