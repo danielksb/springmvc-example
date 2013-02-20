@@ -2,6 +2,7 @@ package example.springmvc.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -9,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import example.springmvc.data.RegistrationError;
 import example.springmvc.data.User;
 import example.springmvc.data.UserRegistrationData;
+import example.springmvc.data.UserRegistrationDataValidator;
 import example.springmvc.data.UserService;
 import example.springmvc.utils.Result;
 
@@ -30,8 +32,12 @@ public class AccountController {
 	 * @return
 	 */
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
-	public String getSignupPage() {
-		return "signup";
+	public ModelAndView getSignupPage() {
+		ModelAndView mav = new ModelAndView();
+		UserRegistrationData userRegistrationData = new UserRegistrationData();
+		mav.addObject("userRegistrationData", userRegistrationData);
+		mav.setViewName("signup");
+		return mav;
 	}
 
 	/**
@@ -42,29 +48,21 @@ public class AccountController {
 	 * @return
 	 */
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
-	public ModelAndView doSignup(UserRegistrationData userRegistrationData) {
+	public ModelAndView doSignup(UserRegistrationData userRegistrationData, BindingResult bindingResult) {
 		ModelAndView mav = new ModelAndView();
-		Result<User, RegistrationError> result = this.userService
-				.createNewUser(userRegistrationData);
-		if (result.isSuccess()) {
-			mav.setViewName("redirect:/");
-		} else {
-			RegistrationError error = result.getError();
-			switch (error.getErrorType()) {
-			case USER_ALREADY_EXISTS:
-				mav.addObject("userId_error", error.getErrorMsg());
-				break;
-			default:
-				mav.addObject("error", error.getErrorMsg());
-				break;
+		
+		new UserRegistrationDataValidator().validate(userRegistrationData, bindingResult);
+		if (!bindingResult.hasErrors()) {
+			Result<User, RegistrationError> result = this.userService.createNewUser(userRegistrationData);
+			if (result.isSuccess()) {
+				mav.setViewName("redirect:/");
+				return mav;
+			} else {
+				bindingResult.reject(null, "error.user_already_exists");
 			}
-
-			// We want to prevent the user from filling out the whole form again,
-			// so we add the registration data to the view. This allows us to
-			// display the old values.
-			mav.addObject("userRegistrationData", userRegistrationData);
-			mav.setViewName("signup");
 		}
+		
+		mav.setViewName("signup");
 		return mav;
 	}
 
