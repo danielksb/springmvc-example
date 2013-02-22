@@ -7,12 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import example.springmvc.data.RegistrationError;
 import example.springmvc.data.User;
 import example.springmvc.data.UserRegistrationData;
 import example.springmvc.data.UserRegistrationDataValidator;
 import example.springmvc.data.UserService;
-import example.springmvc.utils.Result;
 
 /**
  * The AccountController handles all requests for signing up, logging in
@@ -53,8 +51,8 @@ public class AccountController {
 		
 		new UserRegistrationDataValidator().validate(userRegistrationData, bindingResult);
 		if (!bindingResult.hasErrors()) {
-			Result<User, RegistrationError> result = this.userService.createNewUser(userRegistrationData);
-			if (result.isSuccess()) {
+			User user = this.userService.createNewUser(userRegistrationData);
+			if (user != null) {
 				mav.setViewName("redirect:/");
 				return mav;
 			} else {
