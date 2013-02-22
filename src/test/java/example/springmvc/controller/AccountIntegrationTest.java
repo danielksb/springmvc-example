@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(locations = {
 		"classpath:WEB-INF/application-context.xml",
 		"classpath:WEB-INF/spring-security.xml",
-		"classpath:WEB-INF/mvc-dispatcher-servlet.xml" })
+		"classpath:WEB-INF/spring-web.xml" })
 @WebAppConfiguration("src/main/webapp")
 public class AccountIntegrationTest {
 

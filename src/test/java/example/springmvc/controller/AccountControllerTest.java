@@ -7,9 +7,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.ModelAndViewAssert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.DirectFieldBindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
-import example.springmvc.data.RegistrationError;
 import example.springmvc.data.User;
 import example.springmvc.data.UserRegistrationData;
 import example.springmvc.data.UserService;
@@ -36,7 +37,8 @@ public class AccountControllerTest {
 	public void testDoSignupSuccessful() throws Exception {
 		UserRegistrationData userAccountData = new UserRegistrationData(
 				"admin", "system", "system");
-		final ModelAndView mav = this.controller.doSignup(userAccountData);
+		BindingResult result = new DirectFieldBindingResult(userAccountData, "userAccountData");
+		final ModelAndView mav = this.controller.doSignup(userAccountData, result);
 		
 		User user = this.controller.getUserService().getUserStorage().byId("admin");
 		
@@ -50,51 +52,57 @@ public class AccountControllerTest {
 	public void testDoSignup_userAlreadyExists() throws Exception {
 		this.createStandardTestUser();
 		UserRegistrationData userRegistrationData = new UserRegistrationData("admin", "system", "system");
-		final ModelAndView mav = controller.doSignup(userRegistrationData);
+		BindingResult result = new DirectFieldBindingResult(userRegistrationData, "userAccountData");
+		final ModelAndView mav = controller.doSignup(userRegistrationData, result);
 		
 		ModelAndViewAssert.assertViewName(mav, "signup");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "userId_error", "admin");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
+		assertEquals(1, result.getAllErrors().size());
+		assertEquals("error.user_already_exists", result.getAllErrors().get(0).getDefaultMessage());
 	}
 	
 	@Test
 	public void testDoSignup_passwordsNotEqual() throws Exception {
 		UserRegistrationData userRegistrationData = new UserRegistrationData("admin", "system", "metsys");
-		final ModelAndView mav = controller.doSignup(userRegistrationData);
+		BindingResult result = new DirectFieldBindingResult(userRegistrationData, "userAccountData");
+		final ModelAndView mav = controller.doSignup(userRegistrationData, result);
 		
 		ModelAndViewAssert.assertViewName(mav, "signup");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "error", RegistrationError.ErrorType.PASSWORDS_DONT_MATCH.toString());
-		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
+		assertEquals(1, result.getAllErrors().size());
+		assertEquals("error.passwords_dont_match", result.getAllErrors().get(0).getCode());
 	}
 	
 	@Test
 	public void testDoSignup_invalidInput_userId() throws Exception {
-		UserRegistrationData userRegistrationData = new UserRegistrationData(null, "system", "system");
-		final ModelAndView mav = controller.doSignup(userRegistrationData);
+		UserRegistrationData userRegistrationData = new UserRegistrationData("", "system", "system");
+		BindingResult result = new DirectFieldBindingResult(userRegistrationData, "userAccountData");
+		final ModelAndView mav = controller.doSignup(userRegistrationData, result);
 		
 		ModelAndViewAssert.assertViewName(mav, "signup");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "error", RegistrationError.ErrorType.INVALID_INPUT.toString());
-		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
+		assertEquals(1, result.getAllErrors().size());
+		assertEquals("error.fieldRequired", result.getAllErrors().get(0).getCode());
 	}
 	
 	@Test
 	public void testDoSignup_invalidInput_password() throws Exception {
-		UserRegistrationData userRegistrationData = new UserRegistrationData("admin", null, "system");
-		final ModelAndView mav = controller.doSignup(userRegistrationData);
+		UserRegistrationData userRegistrationData = new UserRegistrationData("admin", "", "system");
+		BindingResult result = new DirectFieldBindingResult(userRegistrationData, "userAccountData");
+		final ModelAndView mav = controller.doSignup(userRegistrationData, result);
 		
 		ModelAndViewAssert.assertViewName(mav, "signup");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "error", RegistrationError.ErrorType.INVALID_INPUT.toString());
-		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
+		assertEquals(2, result.getAllErrors().size());
+		assertEquals("error.fieldRequired", result.getAllErrors().get(0).getCode());
+		assertEquals("error.passwords_dont_match", result.getAllErrors().get(1).getCode());
 	}
 	
 	@Test
 	public void testDoSignup_invalidInput_confirmedPassword() throws Exception {
-		UserRegistrationData userRegistrationData = new UserRegistrationData("admin", "system", null);
-		final ModelAndView mav = controller.doSignup(userRegistrationData);
+		UserRegistrationData userRegistrationData = new UserRegistrationData("admin", "system", "");
+		BindingResult result = new DirectFieldBindingResult(userRegistrationData, "userAccountData");
+		final ModelAndView mav = controller.doSignup(userRegistrationData, result);
 		
 		ModelAndViewAssert.assertViewName(mav, "signup");
-		ModelAndViewAssert.assertModelAttributeValue(mav, "error", RegistrationError.ErrorType.INVALID_INPUT.toString());
-		ModelAndViewAssert.assertModelAttributeValue(mav, "userRegistrationData", userRegistrationData);
+		assertEquals(1, result.getAllErrors().size());
+		assertEquals("error.passwords_dont_match", result.getAllErrors().get(0).getCode());
 	}
 
 	@Test
