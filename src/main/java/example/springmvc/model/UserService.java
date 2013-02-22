@@ -1,4 +1,4 @@
-package example.springmvc.data;
+package example.springmvc.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 

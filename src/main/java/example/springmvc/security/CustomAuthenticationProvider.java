@@ -12,7 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import example.springmvc.data.UserService;
+import example.springmvc.model.UserService;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {

@@ -1,4 +1,4 @@
-package example.springmvc.data;
+package example.springmvc.model;
 
 /**
  * This class stores all information which is needed to register new user.

@@ -1,4 +1,4 @@
-package example.springmvc.data;
+package example.springmvc.model;
 
 /**
  * Storage for user data.

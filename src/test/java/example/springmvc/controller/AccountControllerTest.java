@@ -11,10 +11,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.DirectFieldBindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
-import example.springmvc.data.User;
-import example.springmvc.data.UserRegistrationData;
-import example.springmvc.data.UserService;
-import example.springmvc.data.impl.UserStorageDummyImpl;
+import example.springmvc.model.User;
+import example.springmvc.model.UserRegistrationData;
+import example.springmvc.model.UserService;
+import example.springmvc.model.impl.UserStorageDummyImpl;
 
 public class AccountControllerTest {
 

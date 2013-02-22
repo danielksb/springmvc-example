@@ -1,4 +1,4 @@
-package example.springmvc.data;
+package example.springmvc.model;
 
 /**
  * User and account data.
