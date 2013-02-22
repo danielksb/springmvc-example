@@ -17,6 +17,7 @@
 	<http pattern="/login*" security="none"/>
 	<http pattern="/css/**" security="none"/>
 	<http auto-config="true">
+		<intercept-url pattern="/" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/**" access="ROLE_USER" />
 		<form-login
 			login-page="/login"

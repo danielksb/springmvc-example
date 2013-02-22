@@ -1,5 +1,7 @@
 package example.springmvc.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -84,6 +86,21 @@ public class AccountController {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("login");
 		mav.addObject("login_error", true);
+		return mav;
+	}
+	
+	@RequestMapping(value = "/accountSettings")
+	public ModelAndView getUserSettingsPage(Principal principal) {
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("accountSettings");
+		
+		if (principal != null) {
+			String userId = principal.getName();
+		
+			User user = this.getUserService().getUserStorage().byId(userId);
+			mav.addObject("user", user);
+		}
+		
 		return mav;
 	}
 	

@@ -2,6 +2,8 @@ package example.springmvc.controller;
 
 import static org.junit.Assert.*;
 
+import java.security.Principal;
+
 
 import org.junit.After;
 import org.junit.Before;
@@ -109,6 +111,27 @@ public class AccountControllerTest {
 	public void testGetLogin() throws Exception {
 		final ModelAndView mav = controller.getLoginPage();
 		ModelAndViewAssert.assertViewName(mav, "login");
+	}
+	
+	@Test
+	public void testGetUserSettingsPage_userLoggedIn() throws Exception {
+		this.createStandardTestUser();
+		final ModelAndView mav = controller.getUserSettingsPage(new Principal() {
+			
+			@Override
+			public String getName() {
+				return "admin";
+			}
+		});
+		ModelAndViewAssert.assertViewName(mav, "accountSettings");
+		ModelAndViewAssert.assertModelAttributeAvailable(mav, "user");
+	}
+	
+	@Test
+	public void testGetUserSettingsPage_userNotLoggedIn() throws Exception {
+		final ModelAndView mav = controller.getUserSettingsPage(null);
+		ModelAndViewAssert.assertViewName(mav, "accountSettings");
+		assertEquals(null, mav.getModel().get("user"));
 	}
 
 	private void createStandardTestUser() {

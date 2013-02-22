@@ -1,7 +1,7 @@
 package example.springmvc.controller;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import java.security.Principal;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,15 +26,13 @@ public class MainController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView getIndexPage() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String userId = auth.getName();
+	public ModelAndView getIndexPage(Principal principal) {
 		ModelAndView mav = new ModelAndView("index");
-		
-		if (userId == null) {
+		if (principal == null) {
 			mav.addObject("name", "World");
 			mav.addObject("isUserLoggedIn", false);
 		} else {
+			String userId = principal.getName();
 			mav.addObject("name", userId);
 			mav.addObject("isUserLoggedIn", true);
 		}

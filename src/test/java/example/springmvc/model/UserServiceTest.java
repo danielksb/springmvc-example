@@ -1,4 +1,4 @@
-package example.springmvc.controller;
+package example.springmvc.model;
 
 import static org.junit.Assert.*;
 

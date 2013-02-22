@@ -13,6 +13,7 @@
 	<c:choose>
 		<c:when test="${isUserLoggedIn == true}">
 			<a href=<c:url value="j_spring_security_logout"/>>logout</a>
+			<a href="accountSettings">account settings</a>
 		</c:when>
 		<c:otherwise>
 			<a href="login">login</a>
