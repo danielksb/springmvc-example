@@ -1,6 +1,9 @@
 package example.springmvc.model.impl;
 
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 
 import example.springmvc.model.BlogEntry;
 import example.springmvc.model.BlogEntryStorage;
@@ -16,7 +19,17 @@ public class BlogEntryDummyImpl implements BlogEntryStorage {
 
 	@Override
 	public void saveOrUpdate(BlogEntry entry) {
+		if (entry.getId().length() == 0) {
+			entry.setId(UUID.randomUUID().toString());
+		}
 		this.data.put(entry.getId(), entry);
+	}
+
+	@Override
+	public List<BlogEntry> findAll() {
+		List<BlogEntry> list = new LinkedList<>();
+		list.addAll(this.data.values());
+		return list;
 	}
 
 }

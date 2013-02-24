@@ -13,11 +13,13 @@ public class BlogEntry {
 	
 	private List<String> tags = new LinkedList<String>();
 	
-	public BlogEntry(User author) {
+	public BlogEntry(String id, User author) {
+		this.setId(id);
 		this.setAuthorId(author.getId());
 	}
 	
-	public BlogEntry(User author, String text) {
+	public BlogEntry(String id, User author, String text) {
+		this.setId(id);
 		this.setAuthorId(author.getId());
 		this.setText(text);
 	}

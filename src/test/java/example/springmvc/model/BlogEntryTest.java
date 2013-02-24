@@ -14,7 +14,7 @@ public class BlogEntryTest {
 	@Before
 	public void setUp() {
 		user = new User("admin", "system");
-		entry = new BlogEntry(user);
+		entry = new BlogEntry("123", user);
 	}
 	
 	@Test
