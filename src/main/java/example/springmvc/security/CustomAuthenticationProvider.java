@@ -14,6 +14,14 @@ import org.springframework.stereotype.Component;
 
 import example.springmvc.model.UserService;
 
+/**
+ * This authentication provider checks the user name and password of a given
+ * authentication and its credential against the user name and password in
+ * the user storage.
+ * 
+ * @author Daniel
+ *
+ */
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 

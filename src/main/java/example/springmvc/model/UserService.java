@@ -2,6 +2,13 @@ package example.springmvc.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * This class contains functions implementing typical use cases for
+ * handling user data like creating new users and verify given login
+ * information. 
+ * @author Daniel
+ *
+ */
 public class UserService {
 	
 	@Autowired

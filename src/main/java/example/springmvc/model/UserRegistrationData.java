@@ -1,7 +1,7 @@
 package example.springmvc.model;
 
 /**
- * This class stores all information which is needed to register new user.
+ * This class stores all form data which is needed to register a new user.
  * 
  * @author Daniel
  * 
