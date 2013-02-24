@@ -5,6 +5,8 @@ import java.util.List;
 
 public class BlogEntry {
 	
+	private String id = "";
+	
 	private String text = "";
 	
 	private String authorId = "";
@@ -61,6 +63,14 @@ public class BlogEntry {
 
 	public void setAuthorId(String authorId) {
 		this.authorId = authorId;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 }
