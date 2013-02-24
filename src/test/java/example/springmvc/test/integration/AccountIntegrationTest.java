@@ -1,4 +1,4 @@
-package example.springmvc.controller;
+package example.springmvc.test.integration;
 
 import org.junit.Before;
 import org.junit.Test;
