@@ -8,7 +8,7 @@ import java.util.UUID;
 import example.springmvc.model.BlogEntry;
 import example.springmvc.model.BlogEntryStorage;
 
-public class BlogEntryDummyImpl implements BlogEntryStorage {
+public class BlogEntryStorageDummyImpl implements BlogEntryStorage {
 
 	private Hashtable<String, BlogEntry> data = new Hashtable<>();
 	

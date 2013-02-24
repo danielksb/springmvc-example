@@ -4,6 +4,9 @@ import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import example.springmvc.model.BlogEntry;
 import example.springmvc.model.BlogEntryFormData;
@@ -20,16 +23,22 @@ public class BlogController {
 	@Autowired
 	private UserStorage userStorage;
 	
-	public String createBlogEntry(BlogEntryFormData formData, Principal principal) {
+	@RequestMapping(value = "create", method = RequestMethod.GET)
+	public ModelAndView getCreateBlogPage() {
+		return new ModelAndView("create", "blogEntryFormData", new BlogEntryFormData());
+	}
+	
+	@RequestMapping(value = "create", method = RequestMethod.POST)
+	public ModelAndView createBlogEntry(BlogEntryFormData formData, Principal principal) {
 		if (principal != null) {
 			User user = this.userStorage.byId(principal.getName());
 			// the id is empty and will be set when we save the blog entry for
 			// the first time into the database
 			BlogEntry entry = new BlogEntry("", user, formData.getText());
 			this.blogStorage.saveOrUpdate(entry);
-			return "redirect:/";
+			return new ModelAndView("redirect:/");
 		}
-		return "redirect:/login";
+		return new ModelAndView("redirect:/login");
 	}
 	
 	
