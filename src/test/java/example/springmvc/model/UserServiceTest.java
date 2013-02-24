@@ -35,5 +35,22 @@ public class UserServiceTest {
 		User user = userService.createNewUser(data);
 		assertNull(user);
 	}
+	
+	@Test
+	public void testVerifyLogin_success() {
+		userService.getUserStorage().saveOrUpdate(new User("admin", "system"));
+		assertEquals(true, userService.verifyLogin("admin", "system"));
+	}
+	
+	@Test
+	public void testVerifyLogin_wrongPassword() {
+		userService.getUserStorage().saveOrUpdate(new User("admin", "system"));
+		assertEquals(false, userService.verifyLogin("admin", "123"));
+	}
+	
+	@Test
+	public void testVerifyLogin_userDoesNotExist() {
+		assertEquals(false, userService.verifyLogin("admin", "system"));
+	}
 
 }
