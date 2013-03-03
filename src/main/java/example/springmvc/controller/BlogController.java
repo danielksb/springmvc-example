@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import example.springmvc.model.BlogEntry;
 import example.springmvc.model.BlogEntryFormData;
+import example.springmvc.model.BlogEntryFormDataValidator;
 import example.springmvc.model.BlogEntryStorage;
 import example.springmvc.model.User;
 import example.springmvc.model.UserStorage;
@@ -38,15 +40,21 @@ public class BlogController {
 	}
 	
 	@RequestMapping(value = "create", method = RequestMethod.POST)
-	public ModelAndView createBlogEntry(BlogEntryFormData formData, Principal principal) {
+	public ModelAndView createBlogEntry(BlogEntryFormData formData, Principal principal, BindingResult bindingResult) {
 		if (principal != null) {
 			User user = this.userStorage.byId(principal.getName());
-			// the id is empty and will be set when we save the blog entry for
-			// the first time into the database
-			BlogEntry entry = new BlogEntry("", user, formData.getText());
-			entry.addTags(formData.getTags());
-			this.blogStorage.saveOrUpdate(entry);
-			return new ModelAndView("redirect:/blog");
+			if (user != null) {
+				new BlogEntryFormDataValidator().validate(formData, bindingResult);
+				if (bindingResult.hasErrors()) {
+					return new ModelAndView("blog/create");
+				}
+				// the id is empty and will be set when we save the blog entry for
+				// the first time into the database
+				BlogEntry entry = new BlogEntry("", user, formData.getText());
+				entry.addTags(formData.getTags());
+				this.blogStorage.saveOrUpdate(entry);
+				return new ModelAndView("redirect:/blog");
+			}
 		}
 		return new ModelAndView("redirect:/login");
 	}

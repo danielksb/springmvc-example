@@ -6,6 +6,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href=<c:url value="/css/blog.css"/> />
 <title>Create blog entry</title>
 </head>
 <body>
@@ -15,11 +16,13 @@
 			<tr>
 				<td>Message</td>
 				<td><form:input path="text" /></td>
+				<td><form:errors path="text" cssClass="blogError"/></td>
 			</tr>
 
 			<tr>
 				<td>Tags (separated by spaces)</td>
 				<td><form:input path="tags" /></td>
+				<td></td>
 			</tr>
 		</table>
 

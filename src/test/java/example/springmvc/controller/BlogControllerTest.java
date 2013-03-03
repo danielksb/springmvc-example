@@ -7,6 +7,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.ModelAndViewAssert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.DirectFieldBindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
 import example.springmvc.model.BlogEntry;
@@ -63,7 +65,9 @@ public class BlogControllerTest {
 		
 		BlogEntryFormData formData = new BlogEntryFormData("text");
 		formData.setTags("a b");
-		ModelAndView mav = this.controller.createBlogEntry(formData, principal);
+		
+		BindingResult result = new DirectFieldBindingResult(formData, "formData");
+		ModelAndView mav = this.controller.createBlogEntry(formData, principal, result);
 		List<BlogEntry> entries = this.controller.getBlogStorage().findAll();
 		
 		// check blog storage
@@ -80,12 +84,30 @@ public class BlogControllerTest {
 	}
 	
 	@Test
+	public void testCreateBlogEntry_emptyTextField() {
+		this.controller.getUserStorage().saveOrUpdate(new User("admin", "system"));
+		Principal principal = this.createNewPrincipal();
+		
+		BlogEntryFormData formData = new BlogEntryFormData("");
+		
+		BindingResult result = new DirectFieldBindingResult(formData, "formData");
+		ModelAndView mav = this.controller.createBlogEntry(formData, principal, result);
+		List<BlogEntry> entries = this.controller.getBlogStorage().findAll();
+		
+		// check blog storage
+		assertEquals(0, entries.size());
+		
+		ModelAndViewAssert.assertViewName(mav, "blog/create");
+	}
+	
+	@Test
 	public void testCreateBlogEntry_notLoggedIn() {
 		this.controller.getUserStorage().saveOrUpdate(new User("admin", "system"));
 		Principal principal = null;
 		
 		BlogEntryFormData formData = new BlogEntryFormData("text");
-		ModelAndView mav = this.controller.createBlogEntry(formData, principal);
+		BindingResult result = new DirectFieldBindingResult(formData, "formData");
+		ModelAndView mav = this.controller.createBlogEntry(formData, principal, result);
 		List<BlogEntry> entries = this.controller.getBlogStorage().findAll();
 		
 		assertEquals(0, entries.size());
