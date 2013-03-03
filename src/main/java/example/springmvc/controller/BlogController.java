@@ -62,6 +62,15 @@ public class BlogController {
 	@RequestMapping(value = "update/{entryId}", method = RequestMethod.GET)
 	public ModelAndView getBlogEntry(@PathVariable String entryId) {
 		BlogEntry entry = this.blogStorage.byId(entryId);
+		BlogEntryFormData formData = new BlogEntryFormData(entry);
+		return new ModelAndView("blog/update", "entry", formData);
+	}
+	
+	@RequestMapping(value = "update/{entryId}", method = RequestMethod.POST)
+	public ModelAndView changeBlogEntry(@PathVariable String entryId, BlogEntryFormData entry) {
+		BlogEntry blogEntry = this.blogStorage.byId(entryId);
+		blogEntry.addTags(entry.getTags());
+		this.blogStorage.saveOrUpdate(blogEntry);
 		return new ModelAndView("blog/update", "entry", entry);
 	}
 	

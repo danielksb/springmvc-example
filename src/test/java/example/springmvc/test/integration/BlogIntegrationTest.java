@@ -1,11 +1,16 @@
 package example.springmvc.test.integration;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import static org.junit.Assert.*;
+
 import java.security.Principal;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -93,12 +98,41 @@ public class BlogIntegrationTest {
 		User user = new User("admin", "system");
 		userStorage.saveOrUpdate(user);
 		
-		BlogEntry entryA = new BlogEntry("This is message A.", user);
-		BlogEntry entryB = new BlogEntry("This is message B.", user);
+		BlogEntry entryA = new BlogEntry("", user, "This is message A.");
+		BlogEntry entryB = new BlogEntry("", user, "This is message B.");
 		blogStorage.saveOrUpdate(entryA);
 		blogStorage.saveOrUpdate(entryB);
 		
 		this.mockMvc.perform(get("/blog/update/" + entryA.getId()))
 					.andExpect(view().name("blog/update"));
+	}
+	
+	@Test
+	@DirtiesContext
+	public void changeGetBlogPage() throws Exception {
+		UserStorage userStorage = wac.getBean("userStorage", UserStorage.class);
+		BlogEntryStorage blogStorage = wac.getBean("blogEntryStorage", BlogEntryStorage.class);
+		User user = new User("admin", "system");
+		userStorage.saveOrUpdate(user);
+		
+		BlogEntry entryA = new BlogEntry("", user, "This is message A.");
+		BlogEntry entryB = new BlogEntry("", user, "This is message B.");
+		blogStorage.saveOrUpdate(entryA);
+		blogStorage.saveOrUpdate(entryB);
+		
+		// let's check if we can change the entry by forging our own post request
+		this.mockMvc.perform(post("/blog/update/" + entryA.getId())
+					.param("text", "this is a blog entry")
+					.param("tags", "a b")
+					.param("authorId", "user"))
+					.andExpect(view().name("blog/update"));
+		
+		List<String> expectedTags = new LinkedList<String>();
+		expectedTags.add("a");
+		expectedTags.add("b");
+		BlogEntry newEntry = blogStorage.byId(entryA.getId());
+		assertEquals(entryA.getAuthorId(), newEntry.getAuthorId());
+		assertEquals(expectedTags, newEntry.getTags());
+		assertEquals(entryA.getText(), newEntry.getText());
 	}
 }

@@ -33,8 +33,8 @@ public class BlogControllerTest {
 	@Test
 	public void testGetIndex() {
 		User user = new User("admin", "system");
-		BlogEntry entryA = new BlogEntry("This is message A.", user);
-		BlogEntry entryB = new BlogEntry("This is message B.", user);
+		BlogEntry entryA = new BlogEntry("", user, "This is message A.");
+		BlogEntry entryB = new BlogEntry("", user, "This is message B.");
 		this.controller.getUserStorage().saveOrUpdate(user);
 		this.controller.getBlogStorage().saveOrUpdate(entryA);
 		this.controller.getBlogStorage().saveOrUpdate(entryB);
@@ -118,23 +118,54 @@ public class BlogControllerTest {
 	@Test
 	public void testGetBlogEntryPage() {
 		User user = new User("admin", "system");
-		BlogEntry entryA = new BlogEntry("This is message A.", user);
-		BlogEntry entryB = new BlogEntry("This is message B.", user);
+		BlogEntry entryA = new BlogEntry("", user, "This is message A.");
+		BlogEntry entryB = new BlogEntry("", user, "This is message B.");
 		this.controller.getUserStorage().saveOrUpdate(user);
 		this.controller.getBlogStorage().saveOrUpdate(entryA);
 		this.controller.getBlogStorage().saveOrUpdate(entryB);
+		
+		BlogEntryFormData expectedFormData = new BlogEntryFormData(entryA);
 		
 		ModelAndView mav = this.controller.getBlogEntry(entryA.getId());
 		
 		ModelAndViewAssert.assertModelAttributeAvailable(mav, "entry");
 		ModelAndViewAssert.assertViewName(mav, "blog/update");
 		
-		BlogEntry entry = (BlogEntry) mav.getModelMap().get("entry");
+		BlogEntryFormData entry = (BlogEntryFormData) mav.getModelMap().get("entry");
 		
-		assertEquals(entryA.getId(), entry.getId());
-		assertEquals(entryA.getAuthorId(), entry.getAuthorId());
-		assertEquals(entryA.getTags(), entry.getTags());
-		assertEquals(entryA.getText(), entry.getText());
+		assertEquals(expectedFormData.getAuthorId(), entry.getAuthorId());
+		assertEquals(expectedFormData.getTags(), entry.getTags());
+		assertEquals(expectedFormData.getText(), entry.getText());
+	}
+	
+	@Test
+	public void testUpdateBlogEntry() {
+		User user = new User("admin", "system");
+		BlogEntry entryA = new BlogEntry("", user, "This is message A.");
+		BlogEntry entryB = new BlogEntry("", user, "This is message B.");
+		this.controller.getUserStorage().saveOrUpdate(user);
+		this.controller.getBlogStorage().saveOrUpdate(entryA);
+		this.controller.getBlogStorage().saveOrUpdate(entryB);
+		
+		BlogEntryFormData expectedFormData = new BlogEntryFormData(entryA);
+		expectedFormData.setTags("a b");
+		List<String> expectedTags = new LinkedList<String>();
+		expectedTags.add("a");
+		expectedTags.add("b");
+		
+		ModelAndView mav = this.controller.changeBlogEntry(entryA.getId(), expectedFormData);
+		
+		ModelAndViewAssert.assertModelAttributeAvailable(mav, "entry");
+		ModelAndViewAssert.assertViewName(mav, "blog/update");
+		
+		BlogEntryFormData entry = (BlogEntryFormData) mav.getModelMap().get("entry");
+		
+		List<String> updatedTags = this.controller.getBlogStorage().byId(entryA.getId()).getTags();
+		
+		assertEquals(expectedTags, updatedTags);
+		assertEquals(expectedFormData.getAuthorId(), entry.getAuthorId());
+		assertEquals(expectedFormData.getTags(), entry.getTags());
+		assertEquals(expectedFormData.getText(), entry.getText());
 	}
 	
 	private Principal createNewPrincipal() {

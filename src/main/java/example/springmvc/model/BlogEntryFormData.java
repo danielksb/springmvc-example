@@ -1,5 +1,7 @@
 package example.springmvc.model;
 
+import org.springframework.util.StringUtils;
+
 /**
  * This class contains the form data for creating a new blog entry
  * @author Daniel
@@ -11,6 +13,8 @@ public class BlogEntryFormData {
 	
 	private String tags = "";
 	
+	private String authorId = "";
+	
 	
 	public BlogEntryFormData() {
 		
@@ -20,6 +24,12 @@ public class BlogEntryFormData {
 		this.setText(text);
 	}
 	
+
+	public BlogEntryFormData(BlogEntry entry) {
+		this.setTags(StringUtils.collectionToDelimitedString(entry.getTags(), " "));
+		this.setText(entry.getText());
+		this.setAuthorId(entry.getAuthorId());
+	}
 
 	public String getText() {
 		return text;
@@ -35,5 +45,13 @@ public class BlogEntryFormData {
 
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+
+	public String getAuthorId() {
+		return authorId;
+	}
+
+	public void setAuthorId(String authorId) {
+		this.authorId = authorId;
 	}
 }
