@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -40,13 +41,22 @@ public class BlogIntegrationTest {
 	}
 
 	@Test
-	public void testGetCreateEntryPage() throws Exception {
-		this.mockMvc.perform(get("/blog/create"))
-				.andExpect(status().isOk())
-				.andExpect(view().name("create"));
+	public void testGetBlogIndexPage() throws Exception {
+		this.mockMvc.perform(get("/blog"))
+			.andExpect(status().isOk())
+			.andExpect(view().name("blog/index"));
 	}
 	
 	@Test
+	@DirtiesContext
+	public void testGetCreateEntryPage() throws Exception {
+		this.mockMvc.perform(get("/blog/create"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("blog/create"));
+	}
+	
+	@Test
+	@DirtiesContext
 	public void testCreateNewBlogEntry_loggedIn() throws Exception {
 		UserStorage userStorage = wac.getBean("userStorage", UserStorage.class);
 		userStorage.saveOrUpdate(new User("admin", "system"));
@@ -61,10 +71,11 @@ public class BlogIntegrationTest {
 				.param("text", "this is a blog entry")
 				.param("tags", "a b")
 				.principal(principal))
-					.andExpect(view().name("redirect:/"));
+					.andExpect(view().name("redirect:/blog"));
 	}
 	
 	@Test
+	@DirtiesContext
 	public void testCreateNewBlogEntry_NotloggedIn() throws Exception {
 		this.mockMvc.perform(post("/blog/create")
 				.param("text", "this is a blog entry")

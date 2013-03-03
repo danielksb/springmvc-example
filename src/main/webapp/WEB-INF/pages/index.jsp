@@ -20,5 +20,6 @@
 			<a href="signup">signup</a>
 		</c:otherwise>
 	</c:choose>
+	<a href=<c:url value="blog"/>>Go to blog</a>
 </body>
 </html>

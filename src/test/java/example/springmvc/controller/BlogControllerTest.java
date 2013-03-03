@@ -29,9 +29,30 @@ public class BlogControllerTest {
 	}
 	
 	@Test
+	public void testGetIndex() {
+		User user = new User("admin", "system");
+		BlogEntry entryA = new BlogEntry("This is message A.", user);
+		BlogEntry entryB = new BlogEntry("This is message B.", user);
+		this.controller.getUserStorage().saveOrUpdate(user);
+		this.controller.getBlogStorage().saveOrUpdate(entryA);
+		this.controller.getBlogStorage().saveOrUpdate(entryB);
+		List<BlogEntry> expectedEntries = new LinkedList<>();
+		expectedEntries.add(entryA);
+		expectedEntries.add(entryB);
+		
+		ModelAndView mav = this.controller.getIndexPage();
+		ModelAndViewAssert.assertViewName(mav, "blog/index");
+		ModelAndViewAssert.assertModelAttributeAvailable(mav, "entries");
+		@SuppressWarnings("unchecked")
+		List<BlogEntry> entries = (List<BlogEntry>) mav.getModel().get("entries");
+		assertEquals(expectedEntries.size(), entries.size());
+		assertEquals(true, expectedEntries.containsAll(entries));
+	}
+	
+	@Test
 	public void testGetCreateBlogPage() {
-		ModelAndView mav = this.controller.getCreateBlogPage();
-		ModelAndViewAssert.assertViewName(mav, "create");
+		ModelAndView mav = this.controller.getCreatePage();
+		ModelAndViewAssert.assertViewName(mav, "blog/create");
 		ModelAndViewAssert.assertModelAttributeAvailable(mav, "blogEntryFormData");
 	}
 	
@@ -55,7 +76,7 @@ public class BlogControllerTest {
 		assertEquals("admin", entries.get(0).getAuthorId());
 		assertEquals(expectedTags, entries.get(0).getTags());
 		
-		ModelAndViewAssert.assertViewName(mav, "redirect:/");
+		ModelAndViewAssert.assertViewName(mav, "redirect:/blog");
 	}
 	
 	@Test
@@ -82,3 +103,4 @@ public class BlogControllerTest {
 		};
 	}
 }
+

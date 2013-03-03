@@ -1,6 +1,7 @@
 package example.springmvc.controller;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,9 +25,15 @@ public class BlogController {
 	@Autowired
 	private UserStorage userStorage;
 	
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public ModelAndView getIndexPage() {
+		List<BlogEntry> entries = this.blogStorage.findAll();
+		return new ModelAndView("blog/index", "entries", entries);
+	}
+	
 	@RequestMapping(value = "create", method = RequestMethod.GET)
-	public ModelAndView getCreateBlogPage() {
-		return new ModelAndView("create", "blogEntryFormData", new BlogEntryFormData());
+	public ModelAndView getCreatePage() {
+		return new ModelAndView("blog/create", "blogEntryFormData", new BlogEntryFormData());
 	}
 	
 	@RequestMapping(value = "create", method = RequestMethod.POST)
@@ -38,7 +45,7 @@ public class BlogController {
 			BlogEntry entry = new BlogEntry("", user, formData.getText());
 			entry.addTags(formData.getTags());
 			this.blogStorage.saveOrUpdate(entry);
-			return new ModelAndView("redirect:/");
+			return new ModelAndView("redirect:/blog");
 		}
 		return new ModelAndView("redirect:/login");
 	}
