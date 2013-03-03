@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import example.springmvc.model.BlogEntry;
-import example.springmvc.model.BlogEntryFormData;
-import example.springmvc.model.BlogEntryFormDataValidator;
-import example.springmvc.model.BlogEntryStorage;
-import example.springmvc.model.User;
-import example.springmvc.model.UserStorage;
+import example.springmvc.model.blog.User;
+import example.springmvc.model.blog.UserStorage;
+import example.springmvc.model.users.BlogEntry;
+import example.springmvc.model.users.BlogEntryFormData;
+import example.springmvc.model.users.BlogEntryFormDataValidator;
+import example.springmvc.model.users.BlogEntryStorage;
 
 @Controller
 @RequestMapping(value="blog")

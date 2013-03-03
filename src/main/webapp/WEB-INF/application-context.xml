@@ -13,9 +13,9 @@
 		http://www.springframework.org/schema/aop 
 		http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
-	<bean id="userService" class="example.springmvc.model.UserService"></bean>
-	<bean id="userStorage" class="example.springmvc.model.impl.UserStorageDummyImpl"></bean>
-	<bean id="blogEntryStorage" class="example.springmvc.model.impl.BlogEntryStorageDummyImpl"></bean>
+	<bean id="userService" class="example.springmvc.model.blog.UserService"></bean>
+	<bean id="userStorage" class="example.springmvc.model.users.impl.UserStorageDummyImpl"></bean>
+	<bean id="blogEntryStorage" class="example.springmvc.model.blog.impl.BlogEntryStorageDummyImpl"></bean>
 	
 	<!-- replace the previous with the next line to use the MongoDB storage implementation  --> 
 	<!-- bean id="userStorage" class="example.springmvc.model.impl.UserStorageMongoDbImpl"></bean -->

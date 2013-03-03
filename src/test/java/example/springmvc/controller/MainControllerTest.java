@@ -7,9 +7,9 @@ import org.junit.Test;
 import org.springframework.test.web.ModelAndViewAssert;
 import org.springframework.web.servlet.ModelAndView;
 
-import example.springmvc.model.UserRegistrationData;
-import example.springmvc.model.UserService;
-import example.springmvc.model.impl.UserStorageDummyImpl;
+import example.springmvc.model.blog.UserRegistrationData;
+import example.springmvc.model.blog.UserService;
+import example.springmvc.model.users.impl.UserStorageDummyImpl;
 
 public class MainControllerTest {
 

@@ -1,12 +1,12 @@
-package example.springmvc.model.impl;
+package example.springmvc.model.blog.impl;
 
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import example.springmvc.model.BlogEntry;
-import example.springmvc.model.BlogEntryStorage;
+import example.springmvc.model.users.BlogEntry;
+import example.springmvc.model.users.BlogEntryStorage;
 
 public class BlogEntryStorageDummyImpl implements BlogEntryStorage {
 

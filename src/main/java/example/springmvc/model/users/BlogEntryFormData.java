@@ -1,4 +1,4 @@
-package example.springmvc.model;
+package example.springmvc.model.users;
 
 import org.springframework.util.StringUtils;
 

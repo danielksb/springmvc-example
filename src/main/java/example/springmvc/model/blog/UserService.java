@@ -1,4 +1,4 @@
-package example.springmvc.model;
+package example.springmvc.model.blog;
 
 import org.springframework.beans.factory.annotation.Autowired;
 

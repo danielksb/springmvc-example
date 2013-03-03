@@ -1,9 +1,9 @@
-package example.springmvc.model.impl;
+package example.springmvc.model.users.impl;
 
 import java.util.Hashtable;
 
-import example.springmvc.model.User;
-import example.springmvc.model.UserStorage;
+import example.springmvc.model.blog.User;
+import example.springmvc.model.blog.UserStorage;
 
 public class UserStorageDummyImpl implements UserStorage {
 	

@@ -1,10 +1,10 @@
-package example.springmvc.model.impl;
+package example.springmvc.model.users.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 
-import example.springmvc.model.User;
-import example.springmvc.model.UserStorage;
+import example.springmvc.model.blog.User;
+import example.springmvc.model.blog.UserStorage;
 
 public class UserStorageMongoDbImpl implements UserStorage {
 	

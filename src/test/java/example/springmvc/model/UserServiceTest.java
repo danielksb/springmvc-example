@@ -5,10 +5,10 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import example.springmvc.model.User;
-import example.springmvc.model.UserRegistrationData;
-import example.springmvc.model.UserService;
-import example.springmvc.model.impl.UserStorageDummyImpl;
+import example.springmvc.model.blog.User;
+import example.springmvc.model.blog.UserRegistrationData;
+import example.springmvc.model.blog.UserService;
+import example.springmvc.model.users.impl.UserStorageDummyImpl;
 
 public class UserServiceTest {
 	

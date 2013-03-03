@@ -3,6 +3,9 @@ package example.springmvc.model;
 import org.junit.Before;
 import org.junit.Test;
 
+import example.springmvc.model.blog.User;
+import example.springmvc.model.users.BlogEntry;
+
 import static org.junit.Assert.*;
 
 public class BlogEntryTest {

@@ -12,7 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import example.springmvc.model.UserService;
+import example.springmvc.model.blog.UserService;
 
 /**
  * This authentication provider checks the user name and password of a given

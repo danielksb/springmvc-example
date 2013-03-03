@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import example.springmvc.model.User;
-import example.springmvc.model.UserRegistrationData;
-import example.springmvc.model.UserRegistrationDataValidator;
-import example.springmvc.model.UserService;
+import example.springmvc.model.blog.User;
+import example.springmvc.model.blog.UserRegistrationData;
+import example.springmvc.model.blog.UserRegistrationDataValidator;
+import example.springmvc.model.blog.UserService;
 
 /**
  * The AccountController handles all requests for signing up, logging in
