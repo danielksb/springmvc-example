@@ -8,6 +8,7 @@
 <title>Example micro blog</title>
 </head>
 <body>
+	<a href=<c:url value="blog/create"/>>Create new entry</a>
 	<table>
 		<tr>
 			<th>message</th>
