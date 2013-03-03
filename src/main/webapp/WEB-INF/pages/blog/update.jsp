@@ -5,21 +5,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Example micro blog</title>
+<title>Blog entry</title>
 </head>
 <body>
-	<a href=<c:url value="blog/create"/>>Create new entry</a>
 	<table>
 		<tr>
-			<th>message</th>
-			<th>user</th>
+			<td>Message:</td>
+			<td>${entry.text}</td>
 		</tr>
-		<c:forEach items="${entries}" var="entry">
-			<tr>
-				<td><a href=<c:url value="blog/update/${entry.id}"/>>${entry.text}</a></td>
-				<td>${entry.authorId}</td>
-			</tr>
-		</c:forEach>
+
+		<tr>
+			<td>Tags:</td>
+			<td>${entry.tags}</td>
+		</tr>
+		
+		<tr>
+			<td>Author:</td>
+			<td>${entry.authorId}</td>
+		</tr>
 	</table>
+	<a href=<c:url value="/blog"/>> Back </a>
 </body>
 </html>

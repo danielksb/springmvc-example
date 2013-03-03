@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -48,6 +49,12 @@ public class BlogController {
 			return new ModelAndView("redirect:/blog");
 		}
 		return new ModelAndView("redirect:/login");
+	}
+	
+	@RequestMapping(value = "update/{entryId}", method = RequestMethod.GET)
+	public ModelAndView getBlogEntry(@PathVariable String entryId) {
+		BlogEntry entry = this.blogStorage.byId(entryId);
+		return new ModelAndView("blog/update", "entry", entry);
 	}
 	
 	

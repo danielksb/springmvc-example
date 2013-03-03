@@ -19,6 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import example.springmvc.model.BlogEntry;
+import example.springmvc.model.BlogEntryStorage;
 import example.springmvc.model.User;
 import example.springmvc.model.UserStorage;
 
@@ -81,5 +83,22 @@ public class BlogIntegrationTest {
 				.param("text", "this is a blog entry")
 				.param("tags", "a b"))
 					.andExpect(view().name("redirect:/login"));
+	}
+	
+	@Test
+	@DirtiesContext
+	public void testGetBlogPage() throws Exception {
+		UserStorage userStorage = wac.getBean("userStorage", UserStorage.class);
+		BlogEntryStorage blogStorage = wac.getBean("blogEntryStorage", BlogEntryStorage.class);
+		User user = new User("admin", "system");
+		userStorage.saveOrUpdate(user);
+		
+		BlogEntry entryA = new BlogEntry("This is message A.", user);
+		BlogEntry entryB = new BlogEntry("This is message B.", user);
+		blogStorage.saveOrUpdate(entryA);
+		blogStorage.saveOrUpdate(entryB);
+		
+		this.mockMvc.perform(get("/blog/update/" + entryA.getId()))
+					.andExpect(view().name("blog/update"));
 	}
 }

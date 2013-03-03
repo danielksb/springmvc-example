@@ -93,6 +93,28 @@ public class BlogControllerTest {
 		ModelAndViewAssert.assertViewName(mav, "redirect:/login");
 	}
 	
+	@Test
+	public void testGetBlogEntryPage() {
+		User user = new User("admin", "system");
+		BlogEntry entryA = new BlogEntry("This is message A.", user);
+		BlogEntry entryB = new BlogEntry("This is message B.", user);
+		this.controller.getUserStorage().saveOrUpdate(user);
+		this.controller.getBlogStorage().saveOrUpdate(entryA);
+		this.controller.getBlogStorage().saveOrUpdate(entryB);
+		
+		ModelAndView mav = this.controller.getBlogEntry(entryA.getId());
+		
+		ModelAndViewAssert.assertModelAttributeAvailable(mav, "entry");
+		ModelAndViewAssert.assertViewName(mav, "blog/update");
+		
+		BlogEntry entry = (BlogEntry) mav.getModelMap().get("entry");
+		
+		assertEquals(entryA.getId(), entry.getId());
+		assertEquals(entryA.getAuthorId(), entry.getAuthorId());
+		assertEquals(entryA.getTags(), entry.getTags());
+		assertEquals(entryA.getText(), entry.getText());
+	}
+	
 	private Principal createNewPrincipal() {
 		return new Principal() {
 			
@@ -103,4 +125,6 @@ public class BlogControllerTest {
 		};
 	}
 }
+
+
 
