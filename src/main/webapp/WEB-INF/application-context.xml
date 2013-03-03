@@ -15,6 +15,7 @@
 
 	<bean id="userService" class="example.springmvc.model.UserService"></bean>
 	<bean id="userStorage" class="example.springmvc.model.impl.UserStorageDummyImpl"></bean>
+	<bean id="blogEntryStorage" class="example.springmvc.model.impl.BlogEntryStorageDummyImpl"></bean>
 	
 	<!-- replace the previous with the next line to use the MongoDB storage implementation  --> 
 	<!-- bean id="userStorage" class="example.springmvc.model.impl.UserStorageMongoDbImpl"></bean -->

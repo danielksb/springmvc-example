@@ -1,9 +1,10 @@
-package example.springmvc.controller;
+package example.springmvc.test.integration;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -33,12 +34,14 @@ public class AccountIntegrationTest {
 	}
 
 	@Test
+	@DirtiesContext
 	public void testGetSignup() throws Exception {
 		this.mockMvc.perform(get("/signup")).andExpect(status().isOk())
 				.andExpect(view().name("signup"));
 	}
 
 	@Test
+	@DirtiesContext
 	public void testGetLogin() throws Exception {
 		this.mockMvc.perform(get("/login")).andExpect(status().isOk())
 				.andExpect(view().name("login"));
@@ -46,6 +49,7 @@ public class AccountIntegrationTest {
 
 
 	@Test
+	@DirtiesContext
 	public void testCreateAccount() throws Exception {
 		this.mockMvc
 				.perform(
@@ -53,6 +57,6 @@ public class AccountIntegrationTest {
 								.param("id", "admin")
 								.param("password", "system")
 								.param("confirmedPassword", "system"))
-				.andExpect(redirectedUrl("/"));
+				.andExpect(view().name("redirect:/"));
 	}
 }
