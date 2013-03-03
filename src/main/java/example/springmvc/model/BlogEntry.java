@@ -75,4 +75,28 @@ public class BlogEntry {
 		this.id = id;
 	}
 
+	/**
+	 * Add a list of tags to the entry.
+	 * @param tagString
+	 * 		space separated list of tags
+	 */
+	public void addTags(String tagString) {
+		this.addTags(tagString, " ");
+	}
+	/**
+	 * Add a list of tags to the entry.
+	 * @param tagString
+	 * 		string containing tags separated by a delimeter
+	 * @param delimeter
+	 * 		delimieter by which the tags are separated 
+	 */
+	public void addTags(String tagString, String delimeter) {
+		String[] tags = tagString.split(delimeter);
+		for (String tag : tags) {
+			if (tag.length() > 0) {
+				this.addTag(tag);
+			}
+		}
+	}
+
 }

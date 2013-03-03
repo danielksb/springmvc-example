@@ -1,6 +1,7 @@
 package example.springmvc.controller;
 
 import java.security.Principal;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
@@ -40,15 +41,19 @@ public class BlogControllerTest {
 		Principal principal = this.createNewPrincipal();
 		
 		BlogEntryFormData formData = new BlogEntryFormData("text");
+		formData.setTags("a b");
 		ModelAndView mav = this.controller.createBlogEntry(formData, principal);
 		List<BlogEntry> entries = this.controller.getBlogStorage().findAll();
 		
 		// check blog storage
+		List<String> expectedTags = new LinkedList<>();
+		expectedTags.add("a");
+		expectedTags.add("b");
 		assertEquals(1, entries.size());
 		assertEquals(true, entries.get(0).getId().length() > 0);
 		assertEquals(formData.getText(), entries.get(0).getText());
 		assertEquals("admin", entries.get(0).getAuthorId());
-		assertEquals(formData.getTags(), entries.get(0).getTags());
+		assertEquals(expectedTags, entries.get(0).getTags());
 		
 		ModelAndViewAssert.assertViewName(mav, "redirect:/");
 	}

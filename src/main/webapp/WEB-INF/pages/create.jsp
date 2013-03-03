@@ -14,13 +14,13 @@
 		commandName="blogEntryFormData">
 		<table>
 			<tr>
-				<td>Text</td>
+				<td>Message</td>
 				<td><form:input path="text" /></td>
 			</tr>
 
 			<tr>
-				<td>Tags</td>
-				<td><form:input path="tags[0]" /></td>
+				<td>Tags (separated by spaces)</td>
+				<td><form:input path="tags" /></td>
 			</tr>
 		</table>
 

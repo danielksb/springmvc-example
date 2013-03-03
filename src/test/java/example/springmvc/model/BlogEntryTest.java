@@ -35,4 +35,29 @@ public class BlogEntryTest {
 		assertEquals(true, entry.isTagged("b"));
 		assertEquals(false, entry.isTagged("c"));
 	}
+	
+	@Test
+	public void testAddTagsByString() {
+		entry.addTags("a b c");
+		assertEquals(true, entry.isTagged("a"));
+		assertEquals(true, entry.isTagged("b"));
+		assertEquals(true, entry.isTagged("c"));
+	}
+	
+	@Test
+	public void testAddTagsByCSV() {
+		entry.addTags("a;b;c", ";");
+		assertEquals(true, entry.isTagged("a"));
+		assertEquals(true, entry.isTagged("b"));
+		assertEquals(true, entry.isTagged("c"));
+	}
+	
+	@Test
+	public void testAddTagsByString_multipleSpaces() {
+		entry.addTags("a b   c ");
+		assertEquals(3, entry.getTags().size());
+		assertEquals(true, entry.isTagged("a"));
+		assertEquals(true, entry.isTagged("b"));
+		assertEquals(true, entry.isTagged("c"));
+	}
 }

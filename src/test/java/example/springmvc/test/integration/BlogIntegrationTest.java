@@ -41,7 +41,7 @@ public class BlogIntegrationTest {
 
 	@Test
 	public void testGetCreateEntryPage() throws Exception {
-		this.mockMvc.perform(get("/create"))
+		this.mockMvc.perform(get("/blog/create"))
 				.andExpect(status().isOk())
 				.andExpect(view().name("create"));
 	}
@@ -57,20 +57,18 @@ public class BlogIntegrationTest {
 				return "admin";
 			}
 		};
-		this.mockMvc.perform(post("/create")
+		this.mockMvc.perform(post("/blog/create")
 				.param("text", "this is a blog entry")
-				.param("tags[0]", "a")
-				.param("tags[1]", "b")
+				.param("tags", "a b")
 				.principal(principal))
 					.andExpect(view().name("redirect:/"));
 	}
 	
 	@Test
 	public void testCreateNewBlogEntry_NotloggedIn() throws Exception {
-		this.mockMvc.perform(post("/create")
+		this.mockMvc.perform(post("/blog/create")
 				.param("text", "this is a blog entry")
-				.param("tags[0]", "a")
-				.param("tags[1]", "b"))
+				.param("tags", "a b"))
 					.andExpect(view().name("redirect:/login"));
 	}
 }

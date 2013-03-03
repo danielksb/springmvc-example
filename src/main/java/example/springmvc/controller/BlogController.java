@@ -15,6 +15,7 @@ import example.springmvc.model.User;
 import example.springmvc.model.UserStorage;
 
 @Controller
+@RequestMapping(value="blog")
 public class BlogController {
 
 	@Autowired
@@ -35,6 +36,7 @@ public class BlogController {
 			// the id is empty and will be set when we save the blog entry for
 			// the first time into the database
 			BlogEntry entry = new BlogEntry("", user, formData.getText());
+			entry.addTags(formData.getTags());
 			this.blogStorage.saveOrUpdate(entry);
 			return new ModelAndView("redirect:/");
 		}

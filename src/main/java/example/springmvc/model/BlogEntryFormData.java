@@ -1,7 +1,5 @@
 package example.springmvc.model;
 
-import java.util.LinkedList;
-
 /**
  * This class contains the form data for creating a new blog entry
  * @author Daniel
@@ -11,7 +9,7 @@ public class BlogEntryFormData {
 
 	private String text = "";
 	
-	private LinkedList<String> tags = new LinkedList<>();
+	private String tags = "";
 	
 	
 	public BlogEntryFormData() {
@@ -31,11 +29,11 @@ public class BlogEntryFormData {
 		this.text = text;
 	}
 
-	public LinkedList<String> getTags() {
+	public String getTags() {
 		return tags;
 	}
 
-	public void setTags(LinkedList<String> tags) {
+	public void setTags(String tags) {
 		this.tags = tags;
 	}
 }
