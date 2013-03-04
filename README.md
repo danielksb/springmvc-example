@@ -15,8 +15,10 @@ Overview
 Currently the following features are implemented:
  * user registration and login via Spring Security
  * test cases for controllers, models and integration tests
- * simple CRUD operations in form of a micro-blogging service
  * usage of MongoDB
+ 
+ In progress:
+  * simple CRUD operations in form of a micro-blogging service
  
 Future
 -------
