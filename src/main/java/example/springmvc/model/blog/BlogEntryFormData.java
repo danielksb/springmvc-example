@@ -1,6 +1,7 @@
-package example.springmvc.model.users;
+package example.springmvc.model.blog;
 
 import org.springframework.util.StringUtils;
+
 
 /**
  * This class contains the form data for creating a new blog entry

@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import example.springmvc.model.blog.User;
-import example.springmvc.model.blog.UserRegistrationData;
-import example.springmvc.model.blog.UserService;
+import example.springmvc.model.users.User;
+import example.springmvc.model.users.UserRegistrationData;
+import example.springmvc.model.users.UserService;
 import example.springmvc.model.users.impl.UserStorageDummyImpl;
 
 public class UserServiceTest {

@@ -11,10 +11,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.DirectFieldBindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
-import example.springmvc.model.blog.User;
+import example.springmvc.model.blog.BlogEntry;
+import example.springmvc.model.blog.BlogEntryFormData;
 import example.springmvc.model.blog.impl.BlogEntryStorageDummyImpl;
-import example.springmvc.model.users.BlogEntry;
-import example.springmvc.model.users.BlogEntryFormData;
+import example.springmvc.model.users.User;
 import example.springmvc.model.users.impl.UserStorageDummyImpl;
 
 import static org.junit.Assert.*;

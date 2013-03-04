@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 
-import example.springmvc.model.users.BlogEntry;
-import example.springmvc.model.users.BlogEntryStorage;
+import example.springmvc.model.blog.BlogEntry;
+import example.springmvc.model.blog.BlogEntryStorage;
 
 public class BlogEntryMongoDbImpl implements BlogEntryStorage {
 

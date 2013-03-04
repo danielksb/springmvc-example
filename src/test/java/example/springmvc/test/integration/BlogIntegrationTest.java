@@ -24,10 +24,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import example.springmvc.model.blog.User;
-import example.springmvc.model.blog.UserStorage;
-import example.springmvc.model.users.BlogEntry;
-import example.springmvc.model.users.BlogEntryStorage;
+import example.springmvc.model.blog.BlogEntry;
+import example.springmvc.model.blog.BlogEntryStorage;
+import example.springmvc.model.users.User;
+import example.springmvc.model.users.UserStorage;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {

@@ -1,4 +1,4 @@
-package example.springmvc.model.users;
+package example.springmvc.model.blog;
 
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;

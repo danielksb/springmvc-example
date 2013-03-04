@@ -13,9 +13,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.DirectFieldBindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
-import example.springmvc.model.blog.User;
-import example.springmvc.model.blog.UserRegistrationData;
-import example.springmvc.model.blog.UserService;
+import example.springmvc.model.users.User;
+import example.springmvc.model.users.UserRegistrationData;
+import example.springmvc.model.users.UserService;
 import example.springmvc.model.users.impl.UserStorageDummyImpl;
 
 public class AccountControllerTest {

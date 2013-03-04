@@ -1,6 +1,7 @@
-package example.springmvc.model.users;
+package example.springmvc.model.blog;
 
 import java.util.List;
+
 
 /**
  * Storage for blog entries.

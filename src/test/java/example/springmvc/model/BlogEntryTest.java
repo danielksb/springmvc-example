@@ -3,8 +3,8 @@ package example.springmvc.model;
 import org.junit.Before;
 import org.junit.Test;
 
-import example.springmvc.model.blog.User;
-import example.springmvc.model.users.BlogEntry;
+import example.springmvc.model.blog.BlogEntry;
+import example.springmvc.model.users.User;
 
 import static org.junit.Assert.*;
 

@@ -5,8 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import example.springmvc.model.users.BlogEntry;
-import example.springmvc.model.users.BlogEntryStorage;
+import example.springmvc.model.blog.BlogEntry;
+import example.springmvc.model.blog.BlogEntryStorage;
 
 public class BlogEntryStorageDummyImpl implements BlogEntryStorage {
 

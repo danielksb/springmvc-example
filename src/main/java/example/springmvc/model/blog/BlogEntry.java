@@ -1,9 +1,10 @@
-package example.springmvc.model.users;
+package example.springmvc.model.blog;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import example.springmvc.model.blog.User;
+import example.springmvc.model.users.User;
+
 
 
 public class BlogEntry {
