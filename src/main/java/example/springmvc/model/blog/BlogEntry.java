@@ -20,6 +20,9 @@ public class BlogEntry {
 	
 	private List<String> tags = new LinkedList<String>();
 	
+	public BlogEntry() {
+	}
+	
 	public BlogEntry(String id, String text) {
 		this.setId(id);
 		this.setText(text);

@@ -49,7 +49,7 @@ public class BlogController {
 			// the id is empty and will be set when we save the blog entry for
 			// the first time into the database
 			User user = this.getUserFromPrincipal(principal);
-			BlogEntry entry = new BlogEntry("", formData.getText(), user);
+			BlogEntry entry = new BlogEntry(null, formData.getText(), user);
 			entry.addTags(formData.getTags());
 			entry.setCreationDate(new Date());
 			this.blogStorage.saveOrUpdate(entry);

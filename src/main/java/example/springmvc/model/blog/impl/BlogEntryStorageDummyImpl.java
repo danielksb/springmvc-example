@@ -19,7 +19,8 @@ public class BlogEntryStorageDummyImpl implements BlogEntryStorage {
 
 	@Override
 	public void saveOrUpdate(BlogEntry entry) {
-		if (entry.getId().length() == 0) {
+		String id = entry.getId();
+		if (id == null || id.length() == 0) {
 			entry.setId(UUID.randomUUID().toString());
 		}
 		this.data.put(entry.getId(), entry);

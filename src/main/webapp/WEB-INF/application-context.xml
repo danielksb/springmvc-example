@@ -17,8 +17,11 @@
 	<bean id="userStorage" class="example.springmvc.model.users.impl.UserStorageDummyImpl"></bean>
 	<bean id="blogEntryStorage" class="example.springmvc.model.blog.impl.BlogEntryStorageDummyImpl"></bean>
 	
-	<!-- replace the previous with the next line to use the MongoDB storage implementation  --> 
-	<!-- bean id="userStorage" class="example.springmvc.model.impl.UserStorageMongoDbImpl"></bean -->
+	<!-- replace the previous with the next line to use the MongoDB storage implementation  -->
+	<!--    
+	<bean id="userStorage" class="example.springmvc.model.users.impl.UserStorageMongoDbImpl"></bean>
+	<bean id="blogEntryStorage" class="example.springmvc.model.blog.impl.BlogEntryMongoDbImpl"></bean>
+	-->
 
 	<!-- MongoDB -->
 	
