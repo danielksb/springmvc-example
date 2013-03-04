@@ -17,15 +17,17 @@ public class BlogEntry {
 	
 	private List<String> tags = new LinkedList<String>();
 	
-	public BlogEntry(String id, User author) {
+	public BlogEntry(String id, String text) {
 		this.setId(id);
-		this.setAuthorId(author.getId());
+		this.setText(text);
 	}
 	
-	public BlogEntry(String id, User author, String text) {
+	public BlogEntry(String id, String text, User author) {
 		this.setId(id);
-		this.setAuthorId(author.getId());
 		this.setText(text);
+		if (author != null) {
+			this.setAuthorId(author.getId());
+		}
 	}
 	
 	/**

@@ -87,7 +87,7 @@ public class BlogIntegrationTest {
 		this.mockMvc.perform(post("/blog/create")
 				.param("text", "this is a blog entry")
 				.param("tags", "a b"))
-					.andExpect(view().name("redirect:/login"));
+					.andExpect(view().name("redirect:/blog"));
 	}
 	
 	@Test
@@ -98,8 +98,8 @@ public class BlogIntegrationTest {
 		User user = new User("admin", "system");
 		userStorage.saveOrUpdate(user);
 		
-		BlogEntry entryA = new BlogEntry("", user, "This is message A.");
-		BlogEntry entryB = new BlogEntry("", user, "This is message B.");
+		BlogEntry entryA = new BlogEntry("", "This is message A.", user);
+		BlogEntry entryB = new BlogEntry("", "This is message B.", user);
 		blogStorage.saveOrUpdate(entryA);
 		blogStorage.saveOrUpdate(entryB);
 		
@@ -115,8 +115,8 @@ public class BlogIntegrationTest {
 		User user = new User("admin", "system");
 		userStorage.saveOrUpdate(user);
 		
-		BlogEntry entryA = new BlogEntry("", user, "This is message A.");
-		BlogEntry entryB = new BlogEntry("", user, "This is message B.");
+		BlogEntry entryA = new BlogEntry("", "This is message A.", user);
+		BlogEntry entryB = new BlogEntry("", "This is message B.", user);
 		blogStorage.saveOrUpdate(entryA);
 		blogStorage.saveOrUpdate(entryB);
 		

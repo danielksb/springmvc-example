@@ -41,22 +41,18 @@ public class BlogController {
 	
 	@RequestMapping(value = "create", method = RequestMethod.POST)
 	public ModelAndView createBlogEntry(BlogEntryFormData formData, Principal principal, BindingResult bindingResult) {
-		if (principal != null) {
-			User user = this.userStorage.byId(principal.getName());
-			if (user != null) {
-				new BlogEntryFormDataValidator().validate(formData, bindingResult);
-				if (bindingResult.hasErrors()) {
-					return new ModelAndView("blog/create");
-				}
-				// the id is empty and will be set when we save the blog entry for
-				// the first time into the database
-				BlogEntry entry = new BlogEntry("", user, formData.getText());
-				entry.addTags(formData.getTags());
-				this.blogStorage.saveOrUpdate(entry);
-				return new ModelAndView("redirect:/blog");
-			}
+		new BlogEntryFormDataValidator().validate(formData, bindingResult);
+		if (bindingResult.hasErrors()) {
+			return new ModelAndView("blog/create");
+		} else {
+			// the id is empty and will be set when we save the blog entry for
+			// the first time into the database
+			User user = this.getUserFromPrincipal(principal);
+			BlogEntry entry = new BlogEntry("", formData.getText(), user);
+			entry.addTags(formData.getTags());
+			this.blogStorage.saveOrUpdate(entry);
+			return new ModelAndView("redirect:/blog");
 		}
-		return new ModelAndView("redirect:/login");
 	}
 	
 	@RequestMapping(value = "update/{entryId}", method = RequestMethod.GET)
@@ -72,6 +68,14 @@ public class BlogController {
 		blogEntry.addTags(entry.getTags());
 		this.blogStorage.saveOrUpdate(blogEntry);
 		return new ModelAndView("blog/update", "entry", entry);
+	}
+	
+	private User getUserFromPrincipal(Principal principal) {
+		if (principal != null) {
+			return this.userStorage.byId(principal.getName());
+		} else {
+			return null;
+		}
 	}
 	
 	

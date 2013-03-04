@@ -33,8 +33,8 @@ public class BlogControllerTest {
 	@Test
 	public void testGetIndex() {
 		User user = new User("admin", "system");
-		BlogEntry entryA = new BlogEntry("", user, "This is message A.");
-		BlogEntry entryB = new BlogEntry("", user, "This is message B.");
+		BlogEntry entryA = new BlogEntry("", "This is message A.", user);
+		BlogEntry entryB = new BlogEntry("", "This is message B.", user);
 		this.controller.getUserStorage().saveOrUpdate(user);
 		this.controller.getBlogStorage().saveOrUpdate(entryA);
 		this.controller.getBlogStorage().saveOrUpdate(entryB);
@@ -106,20 +106,30 @@ public class BlogControllerTest {
 		Principal principal = null;
 		
 		BlogEntryFormData formData = new BlogEntryFormData("text");
+		formData.setTags("a b");
+		
 		BindingResult result = new DirectFieldBindingResult(formData, "formData");
 		ModelAndView mav = this.controller.createBlogEntry(formData, principal, result);
 		List<BlogEntry> entries = this.controller.getBlogStorage().findAll();
 		
-		assertEquals(0, entries.size());
+		// check blog storage
+		List<String> expectedTags = new LinkedList<>();
+		expectedTags.add("a");
+		expectedTags.add("b");
+		assertEquals(1, entries.size());
+		assertEquals(true, entries.get(0).getId().length() > 0);
+		assertEquals(formData.getText(), entries.get(0).getText());
+		assertEquals("", entries.get(0).getAuthorId());
+		assertEquals(expectedTags, entries.get(0).getTags());
 		
-		ModelAndViewAssert.assertViewName(mav, "redirect:/login");
+		ModelAndViewAssert.assertViewName(mav, "redirect:/blog");
 	}
 	
 	@Test
 	public void testGetBlogEntryPage() {
 		User user = new User("admin", "system");
-		BlogEntry entryA = new BlogEntry("", user, "This is message A.");
-		BlogEntry entryB = new BlogEntry("", user, "This is message B.");
+		BlogEntry entryA = new BlogEntry("", "This is message A.", user);
+		BlogEntry entryB = new BlogEntry("", "This is message B.", user);
 		this.controller.getUserStorage().saveOrUpdate(user);
 		this.controller.getBlogStorage().saveOrUpdate(entryA);
 		this.controller.getBlogStorage().saveOrUpdate(entryB);
@@ -141,8 +151,8 @@ public class BlogControllerTest {
 	@Test
 	public void testUpdateBlogEntry() {
 		User user = new User("admin", "system");
-		BlogEntry entryA = new BlogEntry("", user, "This is message A.");
-		BlogEntry entryB = new BlogEntry("", user, "This is message B.");
+		BlogEntry entryA = new BlogEntry("", "This is message A.", user);
+		BlogEntry entryB = new BlogEntry("", "This is message B.", user);
 		this.controller.getUserStorage().saveOrUpdate(user);
 		this.controller.getBlogStorage().saveOrUpdate(entryA);
 		this.controller.getBlogStorage().saveOrUpdate(entryB);
