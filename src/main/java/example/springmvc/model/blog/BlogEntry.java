@@ -1,5 +1,6 @@
 package example.springmvc.model.blog;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,6 +15,8 @@ public class BlogEntry {
 	private String text = "";
 	
 	private String authorId = "";
+	
+	private Date creationDate = new Date();
 	
 	private List<String> tags = new LinkedList<String>();
 	
@@ -103,6 +106,14 @@ public class BlogEntry {
 				this.addTag(tag);
 			}
 		}
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
 	}
 
 }

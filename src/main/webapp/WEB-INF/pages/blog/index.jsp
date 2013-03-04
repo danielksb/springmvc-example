@@ -8,16 +8,18 @@
 <title>Example micro blog</title>
 </head>
 <body>
-	<a href=<c:url value="blog/create"/>>Create new entry</a>
+	<a href=<c:url value="/blog/create"/>>Create new entry</a>
 	<table>
 		<tr>
 			<th>message</th>
 			<th>user</th>
+			<th>date</th>
 		</tr>
 		<c:forEach items="${entries}" var="entry">
 			<tr>
-				<td><a href=<c:url value="blog/update/${entry.id}"/>>${entry.text}</a></td>
+				<td><a href=<c:url value="/blog/update/${entry.id}"/>>${entry.text}</a></td>
 				<td>${entry.authorId}</td>
+				<th>${entry.creationDate}</th>
 			</tr>
 		</c:forEach>
 	</table>

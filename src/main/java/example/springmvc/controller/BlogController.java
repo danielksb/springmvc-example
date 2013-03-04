@@ -1,6 +1,7 @@
 package example.springmvc.controller;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,7 @@ public class BlogController {
 			User user = this.getUserFromPrincipal(principal);
 			BlogEntry entry = new BlogEntry("", formData.getText(), user);
 			entry.addTags(formData.getTags());
+			entry.setCreationDate(new Date());
 			this.blogStorage.saveOrUpdate(entry);
 			return new ModelAndView("redirect:/blog");
 		}
@@ -58,6 +60,7 @@ public class BlogController {
 	@RequestMapping(value = "update/{entryId}", method = RequestMethod.GET)
 	public ModelAndView getBlogEntry(@PathVariable String entryId) {
 		BlogEntry entry = this.blogStorage.byId(entryId);
+		if (entry == null) throw new ResourceNotFoundException("exception.blogEntry.notFound");
 		BlogEntryFormData formData = new BlogEntryFormData(entry);
 		return new ModelAndView("blog/update", "entry", formData);
 	}
@@ -65,6 +68,7 @@ public class BlogController {
 	@RequestMapping(value = "update/{entryId}", method = RequestMethod.POST)
 	public ModelAndView changeBlogEntry(@PathVariable String entryId, BlogEntryFormData entry) {
 		BlogEntry blogEntry = this.blogStorage.byId(entryId);
+		if (entry == null) throw new ResourceNotFoundException("exception.blogEntry.notFound");
 		blogEntry.addTags(entry.getTags());
 		this.blogStorage.saveOrUpdate(blogEntry);
 		return new ModelAndView("blog/update", "entry", entry);

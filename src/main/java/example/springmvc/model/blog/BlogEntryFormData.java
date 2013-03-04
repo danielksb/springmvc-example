@@ -16,6 +16,7 @@ public class BlogEntryFormData {
 	
 	private String authorId = "";
 	
+	private String creationDate = "";
 	
 	public BlogEntryFormData() {
 		
@@ -30,6 +31,7 @@ public class BlogEntryFormData {
 		this.setTags(StringUtils.collectionToDelimitedString(entry.getTags(), " "));
 		this.setText(entry.getText());
 		this.setAuthorId(entry.getAuthorId());
+		this.setCreationDate(entry.getCreationDate().toString());
 	}
 
 	public String getText() {
@@ -54,5 +56,13 @@ public class BlogEntryFormData {
 
 	public void setAuthorId(String authorId) {
 		this.authorId = authorId;
+	}
+
+	public String getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(String creationDate) {
+		this.creationDate = creationDate;
 	}
 }

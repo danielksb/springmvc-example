@@ -79,6 +79,7 @@ public class BlogControllerTest {
 		assertEquals(formData.getText(), entries.get(0).getText());
 		assertEquals("admin", entries.get(0).getAuthorId());
 		assertEquals(expectedTags, entries.get(0).getTags());
+		assertNotEquals(null, entries.get(0).getCreationDate());
 		
 		ModelAndViewAssert.assertViewName(mav, "redirect:/blog");
 	}
@@ -121,6 +122,7 @@ public class BlogControllerTest {
 		assertEquals(formData.getText(), entries.get(0).getText());
 		assertEquals("", entries.get(0).getAuthorId());
 		assertEquals(expectedTags, entries.get(0).getTags());
+		assertNotEquals(null, entries.get(0).getCreationDate());
 		
 		ModelAndViewAssert.assertViewName(mav, "redirect:/blog");
 	}
@@ -146,6 +148,7 @@ public class BlogControllerTest {
 		assertEquals(expectedFormData.getAuthorId(), entry.getAuthorId());
 		assertEquals(expectedFormData.getTags(), entry.getTags());
 		assertEquals(expectedFormData.getText(), entry.getText());
+		assertEquals(expectedFormData.getCreationDate(), entry.getCreationDate().toString());
 	}
 	
 	@Test
@@ -176,6 +179,7 @@ public class BlogControllerTest {
 		assertEquals(expectedFormData.getAuthorId(), entry.getAuthorId());
 		assertEquals(expectedFormData.getTags(), entry.getTags());
 		assertEquals(expectedFormData.getText(), entry.getText());
+		assertEquals(expectedFormData.getCreationDate(), entry.getCreationDate().toString());
 	}
 	
 	private Principal createNewPrincipal() {

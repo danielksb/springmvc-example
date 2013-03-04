@@ -23,7 +23,11 @@
 
 			<tr>
 				<td>Author:</td>
-				<td><form:label path="authorId"/></td>
+				<td><form:input path="authorId" readonly="true"/></td>
+			</tr>
+			<tr>
+				<td>Creation date:</td>
+				<td><form:input path="creationDate" readonly="true"/></td>
 			</tr>
 		</table>
 		<input type="submit"/>
