@@ -3,6 +3,10 @@ package example.springmvc.model.users;
 /**
  * This class stores all form data which is needed to register a new user.
  * 
+ * In many scenarios form data does not match the underlying data structure
+ * which is created from the user input, to reflect this common problem the
+ * UserRegistrationData class differs from User.
+ * 
  * @author Daniel
  * 
  */
@@ -14,6 +18,7 @@ public class UserRegistrationData {
 	
 	private String confirmedPassword = "";
 
+	// it's a bean, so we unfortunately need the default constructor :-(
 	public UserRegistrationData() {
 
 	}

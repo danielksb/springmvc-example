@@ -1,7 +1,8 @@
 package example.springmvc.model.users;
 
 /**
- * Storage for user data.
+ * Storage for user data. This is the interface for the DAO layer.
+ * 
  * @author Daniel
  *
  */

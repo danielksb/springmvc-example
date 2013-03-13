@@ -5,7 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * This class contains functions implementing typical use cases for
  * handling user data like creating new users and verify given login
- * information. 
+ * information.
+ * 
+ * The reason why we want this code in an extra class instead of implementing
+ * it as members of the User class is simply to assure a complete separation
+ * between the User and the UserStorage.
+ * 
  * @author Daniel
  *
  */

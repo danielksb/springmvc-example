@@ -19,6 +19,9 @@ import example.springmvc.model.users.UserService;
  * authentication and its credential against the user name and password in
  * the user storage.
  * 
+ * See the Spring Security documentation for more details:
+ * 	http://static.springsource.org/spring-security/site/docs/3.1.x/reference/ns-config.html#ns-auth-providers
+ * 
  * @author Daniel
  *
  */

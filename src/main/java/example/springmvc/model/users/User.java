@@ -2,6 +2,7 @@ package example.springmvc.model.users;
 
 /**
  * User and account data.
+ * 
  * @author Daniel
  *
  */

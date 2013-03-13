@@ -4,6 +4,17 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+/**
+ * Validator class for the user registration data. Currently the validator
+ * is called manually.
+ * 
+ *  TODO: inject validator automagically (also experimenting with JSR-303 ...)
+ *  
+ *  http://static.springsource.org/spring/docs/3.2.x/spring-framework-reference/html/validation.html#validation-beanvalidation
+ * 
+ * @author Daniel
+ *
+ */
 public class UserRegistrationDataValidator implements Validator {
 
 	@Override
