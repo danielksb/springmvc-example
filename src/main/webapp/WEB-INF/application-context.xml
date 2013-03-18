@@ -23,6 +23,27 @@
 	<bean id="blogEntryStorage" class="example.springmvc.model.blog.impl.BlogEntryMongoDbImpl"></bean>
 	-->
 
+	<!-- Hibernate -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="org.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost/test" />
+		<property name="username" value="root" />
+		<property name="password" value="asdw23" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- <property name="configurationClass" value="org.hibernate.cfg.AnnotationConfiguration" /> -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+			</props>
+		</property>
+	</bean>
+	
+
 	<!-- MongoDB -->
 	
 	<bean id="mongo" class="com.mongodb.Mongo"></bean>
