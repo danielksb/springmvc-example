@@ -1,15 +1,24 @@
 package example.springmvc.model.users;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * User and account data.
  * 
  * @author Daniel
  *
  */
+@Entity
+@Table(name="tuser")
 public class User {
-	
+	@Id
+	@Column(name="id")
 	private String id = "";
 
+	@Column(name="password")
 	private String password = "";
 
 	public User(String id, String password) {

@@ -14,7 +14,7 @@
 		http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
 	<bean id="userService" class="example.springmvc.model.users.UserService"></bean>
-	<bean id="userStorage" class="example.springmvc.model.users.impl.UserStorageDummyImpl"></bean>
+	<!--<bean id="userStorage" class="example.springmvc.model.users.impl.UserStorageDummyImpl"></bean> -->
 	<bean id="blogEntryStorage" class="example.springmvc.model.blog.impl.BlogEntryStorageDummyImpl"></bean>
 	
 	<!-- replace the previous with the next line to use the MongoDB storage implementation  -->
@@ -22,6 +22,8 @@
 	<bean id="userStorage" class="example.springmvc.model.users.impl.UserStorageMongoDbImpl"></bean>
 	<bean id="blogEntryStorage" class="example.springmvc.model.blog.impl.BlogEntryMongoDbImpl"></bean>
 	-->
+	
+	<bean id="userStorage" class="example.springmvc.model.users.impl.UserStorageSQLImpl"></bean>
 
 	<!-- Hibernate -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
@@ -39,6 +41,7 @@
 			<props>
 				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.current_session_context_class">thread</prop>
 			</props>
 		</property>
 	</bean>
