@@ -18,21 +18,23 @@
 
 	<bean id="userService" class="example.springmvc.model.users.UserService"></bean>
 	
+	<!-- Dummy/In-memory storage implementation -->
 	<!-- <bean id="userStorage" class="example.springmvc.model.users.impl.UserStorageDummyImpl"></bean>  -->
 	<!-- <bean id="blogEntryStorage" class="example.springmvc.model.blog.impl.BlogEntryStorageDummyImpl"></bean> -->
 	
-	<!-- replace the previous with the next line to use the MongoDB storage implementation  -->
-	<!--    
-	<bean id="userStorage" class="example.springmvc.model.users.impl.UserStorageMongoDbImpl"></bean>
-	<bean id="blogEntryStorage" class="example.springmvc.model.blog.impl.BlogEntryMongoDbImpl"></bean>
-	-->
+	<!-- MongoDB storage implementation  -->
+	<!-- <bean id="userStorage" class="example.springmvc.model.users.impl.UserStorageMongoDbImpl"></bean> -->
+	<!-- <bean id="blogEntryStorage" class="example.springmvc.model.blog.impl.BlogEntryMongoDbImpl"></bean> -->
 	
+	<!-- SQL/Hibernate storage implementation  -->
 	<bean id="userStorage" class="example.springmvc.model.users.impl.UserStorageSQLImpl"></bean>
 	<bean id="blogEntryStorage" class="example.springmvc.model.blog.impl.BlogEntryStorageSQLImpl"></bean>
 
 	<!-- Hibernate -->
+	<!-- retrieve data source via jndi -->
 	<jee:jndi-lookup id="jndiDataSource" jndi-name="jdbc/mysql"></jee:jndi-lookup>
 	
+	<!-- manually defined data source -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="org.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost/test" />
@@ -53,12 +55,19 @@
 			<props>
 				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
-				<prop key="hibernate.current_session_context_class">thread</prop>
 				<prop key="hibernate.hbm2ddl.auto">create-drop</prop>
 			</props>
 		</property>
 	</bean>
-	
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<tx:annotation-driven />
+
 
 	<!-- MongoDB -->
 	
