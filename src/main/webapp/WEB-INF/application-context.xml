@@ -17,8 +17,9 @@
 		http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
 
 	<bean id="userService" class="example.springmvc.model.users.UserService"></bean>
+	
 	<!-- <bean id="userStorage" class="example.springmvc.model.users.impl.UserStorageDummyImpl"></bean>  -->
-	<bean id="blogEntryStorage" class="example.springmvc.model.blog.impl.BlogEntryStorageDummyImpl"></bean>
+	<!-- <bean id="blogEntryStorage" class="example.springmvc.model.blog.impl.BlogEntryStorageDummyImpl"></bean> -->
 	
 	<!-- replace the previous with the next line to use the MongoDB storage implementation  -->
 	<!--    
@@ -27,6 +28,7 @@
 	-->
 	
 	<bean id="userStorage" class="example.springmvc.model.users.impl.UserStorageSQLImpl"></bean>
+	<bean id="blogEntryStorage" class="example.springmvc.model.blog.impl.BlogEntryStorageSQLImpl"></bean>
 
 	<!-- Hibernate -->
 	<jee:jndi-lookup id="jndiDataSource" jndi-name="jdbc/mysql"></jee:jndi-lookup>
@@ -44,6 +46,7 @@
 		<property name="annotatedClasses">
 			<list>
 				<value>example.springmvc.model.users.User</value>
+				<value>example.springmvc.model.blog.BlogEntry</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

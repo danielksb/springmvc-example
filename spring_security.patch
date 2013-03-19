@@ -1,0 +1,654 @@
+From 4868d57756630ca0cd7c20344abc4e1e37bf6da0 Mon Sep 17 00:00:00 2001
+From: Daniel <danielkaes82@googlemail.com>
+Date: Tue, 19 Feb 2013 18:53:31 +0100
+Subject: [PATCH] security: utilize spring for login and session managment
+
+---
+ pom.xml                                            | 16 ++++++
+ .../springmvc/controller/AccountController.java    | 67 ----------------------
+ .../springmvc/controller/MainController.java       | 35 ++---------
+ src/main/java/example/springmvc/data/Session.java  | 29 ----------
+ .../example/springmvc/data/SessionStorage.java     | 13 -----
+ .../data/impl/SessionStorageDummyImpl.java         | 32 -----------
+ .../springmvc/data/impl/UserStorageDummyImpl.java  |  2 +-
+ .../security/CustomAuthenticationProvider.java     | 49 ++++++++++++++++
+ src/main/webapp/WEB-INF/application-context.xml    |  3 +
+ src/main/webapp/WEB-INF/pages/index.jsp            |  4 +-
+ src/main/webapp/WEB-INF/pages/login.jsp            |  2 +-
+ src/main/webapp/WEB-INF/spring-security.xml        | 20 +++++++
+ src/main/webapp/WEB-INF/web.xml                    | 17 +++++-
+ .../controller/AccountControllerTest.java          | 66 ---------------------
+ .../springmvc/controller/MainControllerTest.java   | 45 ---------------
+ 15 files changed, 112 insertions(+), 288 deletions(-)
+ delete mode 100644 src/main/java/example/springmvc/data/Session.java
+ delete mode 100644 src/main/java/example/springmvc/data/SessionStorage.java
+ delete mode 100644 src/main/java/example/springmvc/data/impl/SessionStorageDummyImpl.java
+ create mode 100644 src/main/java/example/springmvc/security/CustomAuthenticationProvider.java
+ create mode 100644 src/main/webapp/WEB-INF/spring-security.xml
+ delete mode 100644 src/test/java/example/springmvc/controller/MainControllerTest.java
+
+diff --git a/pom.xml b/pom.xml
+index 968a2cb..fddaa86 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -9,6 +9,7 @@
+ 	<properties>
+ 		<java.version>1.7</java.version>
+ 		<spring.version>3.2.0.RELEASE</spring.version>
++		<spring.security.version>3.1.3.RELEASE</spring.security.version>
+ 		<slf4j.version>1.7.2</slf4j.version>
+ 	</properties>
+ 
+@@ -35,6 +36,21 @@
+ 			<artifactId>spring-test</artifactId>
+ 			<version>${spring.version}</version>
+ 		</dependency>
++		<dependency>
++			<groupId>org.springframework.security</groupId>
++			<artifactId>spring-security-core</artifactId>
++			<version>${spring.security.version}</version>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.security</groupId>
++			<artifactId>spring-security-web</artifactId>
++			<version>${spring.security.version}</version>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.security</groupId>
++			<artifactId>spring-security-config</artifactId>
++			<version>${spring.security.version}</version>
++		</dependency>
+ 
+ 		<!-- Servlet -->
+ 		<dependency>
+diff --git a/src/main/java/example/springmvc/controller/AccountController.java b/src/main/java/example/springmvc/controller/AccountController.java
+index 7a2c1ff..81444f1 100644
+--- a/src/main/java/example/springmvc/controller/AccountController.java
++++ b/src/main/java/example/springmvc/controller/AccountController.java
+@@ -1,18 +1,12 @@
+ package example.springmvc.controller;
+ 
+-import javax.servlet.http.Cookie;
+-import javax.servlet.http.HttpServletResponse;
+-
+ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Controller;
+-import org.springframework.web.bind.annotation.CookieValue;
+ import org.springframework.web.bind.annotation.RequestMapping;
+ import org.springframework.web.bind.annotation.RequestMethod;
+ import org.springframework.web.servlet.ModelAndView;
+ 
+ import example.springmvc.data.RegistrationError;
+-import example.springmvc.data.Session;
+-import example.springmvc.data.SessionStorage;
+ import example.springmvc.data.User;
+ import example.springmvc.data.UserRegistrationData;
+ import example.springmvc.data.UserStorage;
+@@ -31,9 +25,6 @@ public class AccountController {
+ 	@Autowired
+ 	private UserStorage userStorage;
+ 
+-	@Autowired
+-	private SessionStorage sessionStorage;
+-
+ 	/**
+ 	 * Displays the signup form.
+ 	 * @return
+@@ -87,58 +78,7 @@ public class AccountController {
+ 		mav.setViewName("login");
+ 		return mav;
+ 	}
+-
+-	/**
+-	 * Handles the login. If successful a session cookie will be set in
+-	 * the response and the user is now officially "logged in".
+-	 * @param userId
+-	 * 		user name
+-	 * @param password
+-	 * 		password of the user
+-	 * @param response
+-	 * 		response object, is needed to set the cookie
+-	 * @return
+-	 */
+-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+-	public ModelAndView doLogin(String userId, String password,
+-			HttpServletResponse response) {
+-
+-		User user = this.userStorage.byId(userId);
+-		if (user == null || !user.getPassword().equals(password)) {
+-			ModelAndView mav = new ModelAndView();
+-			mav.setViewName("login");
+-			mav.addObject("login_error", true);
+-			return mav;
+-		} else {
+-			Session session = this.sessionStorage.create(userId);
+-
+-			response.addCookie(new Cookie("sessionId", session.getId()));
+-
+-			ModelAndView mav = new ModelAndView();
+-			mav.setViewName("redirect:/");
+-			return mav;
+-		}
+-	}
+ 	
+-	/**
+-	 * Log out an user and delete the session cookie.
+-	 * @param sessionId
+-	 * 		session id which needs to be finished, this is stored in a cookie
+-	 * @param response
+-	 * 		response object, used to delete the cookie
+-	 * @return
+-	 */
+-	@RequestMapping(value = "/logout", method = RequestMethod.POST)
+-	public String doLogout(@CookieValue("sessionId") String sessionId, HttpServletResponse response) {
+-		if (sessionId != null) {
+-			this.sessionStorage.deleteById(sessionId);
+-			Cookie cookie = new Cookie("sessionId", null);
+-			cookie.setMaxAge(0);
+-			response.addCookie(cookie);
+-		}
+-		return "redirect:/";
+-	}
+-
+ 	// getters and setters
+ 	
+ 	public UserStorage getUserStorage() {
+@@ -149,11 +89,4 @@ public class AccountController {
+ 		this.userStorage = userStorage;
+ 	}
+ 
+-	public SessionStorage getSessionStorage() {
+-		return sessionStorage;
+-	}
+-
+-	public void setSessionStorage(SessionStorage sessionStorage) {
+-		this.sessionStorage = sessionStorage;
+-	}
+ }
+diff --git a/src/main/java/example/springmvc/controller/MainController.java b/src/main/java/example/springmvc/controller/MainController.java
+index f558018..7698ef2 100644
+--- a/src/main/java/example/springmvc/controller/MainController.java
++++ b/src/main/java/example/springmvc/controller/MainController.java
+@@ -1,15 +1,12 @@
+ package example.springmvc.controller;
+ 
+-import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.security.core.Authentication;
++import org.springframework.security.core.context.SecurityContextHolder;
+ import org.springframework.stereotype.Controller;
+-import org.springframework.web.bind.annotation.CookieValue;
+ import org.springframework.web.bind.annotation.RequestMapping;
+ import org.springframework.web.bind.annotation.RequestMethod;
+ import org.springframework.web.servlet.ModelAndView;
+ 
+-import example.springmvc.data.Session;
+-import example.springmvc.data.SessionStorage;
+-
+ /**
+  * This controller is responsible for the main/index page of the web
+  * application.
+@@ -19,10 +16,6 @@ import example.springmvc.data.SessionStorage;
+ @Controller
+ @RequestMapping("/")
+ public class MainController {
+-
+-	
+-	@Autowired
+-	private SessionStorage sessionStorage;
+ 	
+ 	/**
+ 	 * Displays the web page by greeting the user with it's user name. If
+@@ -33,8 +26,9 @@ public class MainController {
+ 	 * @return
+ 	 */
+ 	@RequestMapping(method = RequestMethod.GET)
+-	public ModelAndView getIndexPage(@CookieValue(required=false, value="sessionId") String sessionId) {
+-		String userId = this.getUserId(sessionId);
++	public ModelAndView getIndexPage() {
++		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
++		String userId = auth.getName();
+ 		ModelAndView mav = new ModelAndView("index");
+ 		
+ 		if (userId == null) {
+@@ -46,24 +40,5 @@ public class MainController {
+ 		}
+ 		return mav;
+ 	}
+-	
+-	private String getUserId(String sessionId) {
+-		if (sessionId != null) {
+-			Session session = this.sessionStorage.getById(sessionId);
+-			if (session != null) {
+-				String userId = session.getUserId();
+-				return userId;
+-			}
+-		}
+-		return null;
+-	}
+-	
+-	public SessionStorage getSessionStorage() {
+-		return sessionStorage;
+-	}
+-
+-	public void setSessionStorage(SessionStorage sessionStorage) {
+-		this.sessionStorage = sessionStorage;
+-	}
+ 
+ }
+diff --git a/src/main/java/example/springmvc/data/Session.java b/src/main/java/example/springmvc/data/Session.java
+deleted file mode 100644
+index 6e47716..0000000
+--- a/src/main/java/example/springmvc/data/Session.java
++++ /dev/null
+@@ -1,29 +0,0 @@
+-package example.springmvc.data;
+-
+-/**
+- * This is a user session.
+- * @author Daniel
+- *
+- */
+-public class Session {
+-
+-	private String id = "";
+-	
+-	private String userId = "";
+-
+-	public String getId() {
+-		return id;
+-	}
+-
+-	public void setId(String id) {
+-		this.id = id;
+-	}
+-
+-	public String getUserId() {
+-		return userId;
+-	}
+-
+-	public void setUserId(String userId) {
+-		this.userId = userId;
+-	}
+-}
+diff --git a/src/main/java/example/springmvc/data/SessionStorage.java b/src/main/java/example/springmvc/data/SessionStorage.java
+deleted file mode 100644
+index 644de5b..0000000
+--- a/src/main/java/example/springmvc/data/SessionStorage.java
++++ /dev/null
+@@ -1,13 +0,0 @@
+-package example.springmvc.data;
+-
+-/**
+- * Storage for user sessions.
+- * @author Daniel
+- *
+- */
+-public interface SessionStorage {
+-
+-	public Session create(String userId);
+-	public Session getById(String sessionId);
+-	public Session deleteById(String sessionId);
+-}
+diff --git a/src/main/java/example/springmvc/data/impl/SessionStorageDummyImpl.java b/src/main/java/example/springmvc/data/impl/SessionStorageDummyImpl.java
+deleted file mode 100644
+index 1ff84ee..0000000
+--- a/src/main/java/example/springmvc/data/impl/SessionStorageDummyImpl.java
++++ /dev/null
+@@ -1,32 +0,0 @@
+-package example.springmvc.data.impl;
+-
+-import java.util.HashMap;
+-import java.util.UUID;
+-
+-import example.springmvc.data.Session;
+-import example.springmvc.data.SessionStorage;
+-
+-public class SessionStorageDummyImpl implements SessionStorage {
+-
+-	private HashMap<String, Session> data = new HashMap<>();
+-	
+-	@Override
+-	public Session getById(String sessionId) {
+-		return this.data.get(sessionId);
+-	}
+-
+-	@Override
+-	public Session create(String userId) {
+-		Session session = new Session();
+-		session.setUserId(userId);
+-		session.setId(UUID.randomUUID().toString());
+-		this.data.put(session.getId(), session);
+-		return session;
+-	}
+-
+-	@Override
+-	public Session deleteById(String sessionId) {
+-		return this.data.remove(sessionId);
+-	}
+-
+-}
+diff --git a/src/main/java/example/springmvc/data/impl/UserStorageDummyImpl.java b/src/main/java/example/springmvc/data/impl/UserStorageDummyImpl.java
+index 94d618d..a8bdf94 100644
+--- a/src/main/java/example/springmvc/data/impl/UserStorageDummyImpl.java
++++ b/src/main/java/example/springmvc/data/impl/UserStorageDummyImpl.java
+@@ -37,7 +37,7 @@ public class UserStorageDummyImpl implements UserStorage {
+ 
+ 	@Override
+ 	public boolean verifyLogin(String userName, String password) {
+-		User user = this.data.get("userName");
++		User user = this.data.get(userName);
+ 		return (user != null) &&  user.getPassword().equals(password);
+ 	}
+ }
+diff --git a/src/main/java/example/springmvc/security/CustomAuthenticationProvider.java b/src/main/java/example/springmvc/security/CustomAuthenticationProvider.java
+new file mode 100644
+index 0000000..f0b43ac
+--- /dev/null
++++ b/src/main/java/example/springmvc/security/CustomAuthenticationProvider.java
+@@ -0,0 +1,49 @@
++package example.springmvc.security;
++
++import java.util.ArrayList;
++import java.util.List;
++
++import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.security.authentication.AuthenticationProvider;
++import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
++import org.springframework.security.core.Authentication;
++import org.springframework.security.core.AuthenticationException;
++import org.springframework.security.core.GrantedAuthority;
++import org.springframework.security.core.authority.SimpleGrantedAuthority;
++
++import example.springmvc.data.UserStorage;
++
++public class CustomAuthenticationProvider implements AuthenticationProvider {
++
++	@Autowired
++	private UserStorage userStorage;
++
++	@Override
++	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
++		String name = authentication.getName();
++		String password = authentication.getCredentials().toString();
++		if (this.userStorage.verifyLogin(name, password)) {
++			List<GrantedAuthority> grantedAuths = new ArrayList<>();
++			grantedAuths.add(new SimpleGrantedAuthority("ROLE_USER"));
++			Authentication auth = new UsernamePasswordAuthenticationToken(name, password, grantedAuths);
++			return auth;
++		} else {
++			return null;
++		}
++	}
++
++	@Override
++	public boolean supports(Class<?> authentication) {
++		return authentication.equals(UsernamePasswordAuthenticationToken.class);
++	}
++
++	
++	
++	public UserStorage getUserStorage() {
++		return userStorage;
++	}
++
++	public void setUserStorage(UserStorage userStorage) {
++		this.userStorage = userStorage;
++	}
++}
+diff --git a/src/main/webapp/WEB-INF/application-context.xml b/src/main/webapp/WEB-INF/application-context.xml
+index 7ce2d46..bc72c8a 100644
+--- a/src/main/webapp/WEB-INF/application-context.xml
++++ b/src/main/webapp/WEB-INF/application-context.xml
+@@ -15,5 +15,8 @@
+ 		
+ 		<bean id="userStorage" class="example.springmvc.data.impl.UserStorageDummyImpl"></bean>
+ 		<bean id="sessionStorage" class="example.springmvc.data.impl.SessionStorageDummyImpl"></bean>
++		<bean id="customAuthenticationProvider" class="example.springmvc.security.CustomAuthenticationProvider">
++			<property name="userStorage" ref="userStorage"></property>
++		</bean>
+ 	
+ </beans>
+\ No newline at end of file
+diff --git a/src/main/webapp/WEB-INF/pages/index.jsp b/src/main/webapp/WEB-INF/pages/index.jsp
+index 8ab7b37..24d173c 100644
+--- a/src/main/webapp/WEB-INF/pages/index.jsp
++++ b/src/main/webapp/WEB-INF/pages/index.jsp
+@@ -12,9 +12,7 @@
+ 	<h1>Hello, ${name}</h1>
+ 	<c:choose>
+ 		<c:when test="${isUserLoggedIn == true}">
+-			<form action="logout" method="post">
+-				<input type="submit" value="logout" />
+-			</form>
++			<a href=<c:url value="j_spring_security_logout"/>>logout</a>
+ 		</c:when>
+ 		<c:otherwise>
+ 			<a href="login">login</a>
+diff --git a/src/main/webapp/WEB-INF/pages/login.jsp b/src/main/webapp/WEB-INF/pages/login.jsp
+index f969e40..097fc62 100644
+--- a/src/main/webapp/WEB-INF/pages/login.jsp
++++ b/src/main/webapp/WEB-INF/pages/login.jsp
+@@ -10,7 +10,7 @@
+ </head>
+ <body>
+ 	<h1>Login</h1>
+-	<form method="post" action="login" accept-charset="UTF-8">
++	<form method="post" action=<c:url value="j_spring_security_check"/> accept-charset="UTF-8">
+ 		<table>
+ 			<tr>
+ 				<td>Username</td>
+diff --git a/src/main/webapp/WEB-INF/spring-security.xml b/src/main/webapp/WEB-INF/spring-security.xml
+new file mode 100644
+index 0000000..70187a9
+--- /dev/null
++++ b/src/main/webapp/WEB-INF/spring-security.xml
+@@ -0,0 +1,20 @@
++<beans:beans xmlns="http://www.springframework.org/schema/security"
++	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
++	xsi:schemaLocation="http://www.springframework.org/schema/beans
++           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
++           http://www.springframework.org/schema/security
++           http://www.springframework.org/schema/security/spring-security-3.1.xsd">
++
++	<http pattern="/signup" security="none"/>
++	<http pattern="/login" security="none"/>
++	<http auto-config="true">
++		<intercept-url pattern="/**" access="ROLE_USER" />
++		<form-login login-page="/login" default-target-url="/" username-parameter="userId" password-parameter="password"/>
++	</http>
++	
++	<authentication-manager>
++		<authentication-provider ref="customAuthenticationProvider"/>
++	</authentication-manager>
++	
++
++</beans:beans>
+\ No newline at end of file
+diff --git a/src/main/webapp/WEB-INF/web.xml b/src/main/webapp/WEB-INF/web.xml
+index 2aaa381..fe719b5 100644
+--- a/src/main/webapp/WEB-INF/web.xml
++++ b/src/main/webapp/WEB-INF/web.xml
+@@ -28,11 +28,26 @@
+ 	
+ 	<context-param>
+ 		<param-name>contextConfigLocation</param-name>
+-		<param-value>/WEB-INF/application-context.xml</param-value>
++		<param-value>
++			/WEB-INF/application-context.xml,
++			/WEB-INF/spring-security.xml
++		</param-value>
+ 	</context-param>
+ 	
+ 	<listener>
+ 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+ 	</listener>
+ 	
++	<!-- Spring security -->
++
++	<filter>
++		<filter-name>springSecurityFilterChain</filter-name>
++		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
++	</filter>
++
++	<filter-mapping>
++		<filter-name>springSecurityFilterChain</filter-name>
++		<url-pattern>/*</url-pattern>
++	</filter-mapping>
++	
+ </web-app>
+\ No newline at end of file
+diff --git a/src/test/java/example/springmvc/controller/AccountControllerTest.java b/src/test/java/example/springmvc/controller/AccountControllerTest.java
+index d433665..60314bd 100644
+--- a/src/test/java/example/springmvc/controller/AccountControllerTest.java
++++ b/src/test/java/example/springmvc/controller/AccountControllerTest.java
+@@ -2,20 +2,16 @@ package example.springmvc.controller;
+ 
+ import static org.junit.Assert.*;
+ 
+-import javax.servlet.http.Cookie;
+ 
+ import org.junit.After;
+ import org.junit.Before;
+ import org.junit.Test;
+-import org.springframework.mock.web.MockHttpServletResponse;
+ import org.springframework.test.web.ModelAndViewAssert;
+ import org.springframework.web.servlet.ModelAndView;
+ 
+ import example.springmvc.data.RegistrationError;
+-import example.springmvc.data.Session;
+ import example.springmvc.data.User;
+ import example.springmvc.data.UserRegistrationData;
+-import example.springmvc.data.impl.SessionStorageDummyImpl;
+ import example.springmvc.data.impl.UserStorageDummyImpl;
+ 
+ public class AccountControllerTest {
+@@ -26,7 +22,6 @@ public class AccountControllerTest {
+ 	public void setUp() {
+ 		controller = new AccountController();
+ 		controller.setUserStorage(new UserStorageDummyImpl());
+-		controller.setSessionStorage(new SessionStorageDummyImpl());
+ 	}
+ 
+ 	@After
+@@ -104,67 +99,6 @@ public class AccountControllerTest {
+ 		ModelAndViewAssert.assertViewName(mav, "login");
+ 	}
+ 
+-	@Test
+-	public void testDoLogin_successful() throws Exception {
+-		this.createStandardTestUser();
+-		
+-		MockHttpServletResponse response = new MockHttpServletResponse();
+-		
+-		final ModelAndView mav = controller.doLogin("admin", "system", response);
+-		
+-		ModelAndViewAssert.assertViewName(mav, "redirect:/");
+-		Cookie cookie = response.getCookie("sessionId");
+-		assertNotNull(cookie);
+-		assertNotNull(cookie.getValue());
+-		Session session = this.controller.getSessionStorage().getById(cookie.getValue());
+-		assertNotNull(session);
+-		assertEquals("admin", session.getUserId());
+-	}
+-	
+-	@Test
+-	public void testDoLogin_failed_unknownUser() throws Exception {
+-		this.createStandardTestUser();
+-		
+-		MockHttpServletResponse response = new MockHttpServletResponse();
+-		
+-		final ModelAndView mav = controller.doLogin("user", "system", response);
+-		
+-		ModelAndViewAssert.assertViewName(mav, "login");
+-		ModelAndViewAssert.assertModelAttributeValue(mav, "login_error", true);
+-		Cookie cookie = response.getCookie("sessionId");
+-		assertNull(cookie);
+-	}
+-	
+-	@Test
+-	public void testDoLogin_failed_wrongPassword() throws Exception {
+-		this.createStandardTestUser();
+-		
+-		MockHttpServletResponse response = new MockHttpServletResponse();
+-		
+-		final ModelAndView mav = controller.doLogin("admin", "12345", response);
+-		
+-		ModelAndViewAssert.assertViewName(mav, "login");
+-		ModelAndViewAssert.assertModelAttributeValue(mav, "login_error", true);
+-		Cookie cookie = response.getCookie("sessionId");
+-		assertNull(cookie);
+-	}
+-	
+-	@Test
+-	public void testLogout_successful() {
+-		this.createStandardTestUser();
+-		Session session = this.controller.getSessionStorage().create("admin");
+-		
+-		MockHttpServletResponse response = new MockHttpServletResponse();
+-		
+-		final String viewName = controller.doLogout(session.getId(), response);
+-		assertEquals("redirect:/", viewName);
+-		assertNull(this.controller.getSessionStorage().getById(session.getId()));
+-		Cookie cookie = response.getCookie("sessionId");
+-		assertNotNull(cookie);
+-		assertEquals(0, cookie.getMaxAge());
+-		assertEquals(null, cookie.getValue());
+-	}
+-	
+ 	private void createStandardTestUser() {
+ 		this.controller.getUserStorage().createNewUser(new UserRegistrationData("admin", "system", "system"));
+ 	}
+diff --git a/src/test/java/example/springmvc/controller/MainControllerTest.java b/src/test/java/example/springmvc/controller/MainControllerTest.java
+deleted file mode 100644
+index a7a72ad..0000000
+--- a/src/test/java/example/springmvc/controller/MainControllerTest.java
++++ /dev/null
+@@ -1,45 +0,0 @@
+-package example.springmvc.controller;
+-
+-import org.junit.After;
+-import org.junit.Before;
+-import org.junit.Test;
+-import org.springframework.test.web.ModelAndViewAssert;
+-import org.springframework.web.servlet.ModelAndView;
+-
+-import example.springmvc.data.Session;
+-import example.springmvc.data.impl.SessionStorageDummyImpl;
+-
+-public class MainControllerTest {
+-
+-	private MainController controller;
+-	
+-	@Before
+-	public void setUp() {
+-		controller = new MainController();
+-		controller.setSessionStorage(new SessionStorageDummyImpl());
+-	}
+-
+-	@After
+-	public void tearDown() {
+-	}
+-
+-	@Test
+-	public void testGetIndex_notLoggedIn() throws Exception {
+-		final ModelAndView mav = this.controller.getIndexPage(null);
+-		
+-		ModelAndViewAssert.assertViewName(mav, "index");
+-		ModelAndViewAssert.assertModelAttributeValue(mav, "name", "World");
+-		ModelAndViewAssert.assertModelAttributeValue(mav, "isUserLoggedIn", false);
+-	}
+-	
+-	@Test
+-	public void testGetIndex_loggedIn() throws Exception {
+-		Session session = this.controller.getSessionStorage().create("admin");
+-		
+-		final ModelAndView mav = this.controller.getIndexPage(session.getId());
+-		
+-		ModelAndViewAssert.assertViewName(mav, "index");
+-		ModelAndViewAssert.assertModelAttributeValue(mav, "name", "admin");
+-		ModelAndViewAssert.assertModelAttributeValue(mav, "isUserLoggedIn", true);
+-	}
+-}
+-- 
+1.8.0.msysgit.0
+

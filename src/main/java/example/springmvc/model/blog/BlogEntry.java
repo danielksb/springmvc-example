@@ -4,20 +4,38 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
+
 import example.springmvc.model.users.User;
 
 
-
+@Entity
+@Table(name="blogentry_table")
 public class BlogEntry {
 	
+	@Id
+	@Column(name="id")
 	private String id = "";
 	
+	@Column(name="text")
 	private String text = "";
 	
+	@Column(name="user_id")
 	private String authorId = "";
 	
+	@Column(name="creation_date")
 	private Date creationDate = new Date();
 	
+	@ElementCollection(fetch=FetchType.EAGER, targetClass=String.class)
+	@CollectionTable(name="tags_table", joinColumns=@JoinColumn(name = "id"))
+	@Column(name="tags")
 	private List<String> tags = new LinkedList<String>();
 	
 	public BlogEntry() {
