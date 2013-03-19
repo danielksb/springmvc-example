@@ -14,6 +14,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name="tuser")
 public class User {
+	
+	public User(){}
+	
 	@Id
 	@Column(name="id")
 	private String id = "";

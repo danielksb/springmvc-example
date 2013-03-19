@@ -28,5 +28,4 @@ public class UserStorageSQLImpl implements UserStorage {
 		session.saveOrUpdate(user);
 		session.getTransaction().commit();
 	}
-
 }
