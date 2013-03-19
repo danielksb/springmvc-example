@@ -12,7 +12,8 @@ Overview
 Currently the following features are implemented:
  * user registration and login via Spring Security and a very simple custom authentication provider
  * test cases for controllers, models and integration tests
- * usage of MongoDB via Spring Data, see config in application-context.xml
+ * usage of MongoDB via Spring Data (must be activated)
+ * Hibernate and transaction management (must be activated)
  
  In progress:
   * simple CRUD operations in form of a blog-like message service
@@ -20,7 +21,6 @@ Currently the following features are implemented:
 Future
 -------
  * Selenium acceptance tests
- * Hibernate and transaction management
  * Spring Web Flow example
  * REST with Spring and Jersey
  * maybe a more modern template engine
